@@ -1,0 +1,1266 @@
+/* ============================================================
+   XPOPUP — Скины и модификаторы
+   ============================================================
+   Содержит:
+   1. xpopup_skin_default       — базовый скин (CSS-переменные)
+   2. xpopup_skin_default-dark  — тёмная версия default
+   3. xpopup_skin_strong        — светлый строгий
+   4. xpopup_skin_vk            — ВКонтакте
+   5. xpopup_skin_lite          — лёгкий (без фона и отступов)
+   6. xpopup_skin_ios           — в стилистике iOS
+   7. xpopup_skin_material3     — в стилистике Material 3
+   8. xpopup_skin_ya            — в стилистике Яндекс
+   9. Модификаторы скинов (skinmod)
+
+   Все скины используют CSS-переменные с fallback-значениями,
+   поэтому работают и без подключения xpopup_skin_default.
+
+   = БАЗОВЫЕ CSS-ПЕРЕМЕННЫЕ СКИНА =
+   Каждый скин определяет полный набор переменных:
+   --xpopup_border-radius       — скругление углов
+   --xpopup_background          — фон контента
+   --xpopup_box-shadow          — тень контейнера
+   --xpopup_padding_base        — базовый отступ
+   --xpopup__box_padding        — отступ вокруг контейнера
+   --xpopup__header_height      — высота шапки
+   --xpopup__header_background  — фон шапки
+   --xpopup__header_color       — цвет текста шапки
+   --xpopup__header_border-bottom — нижняя граница шапки
+   --xpopup__header_font-size   — размер шрифта шапки
+   --xpopup__header_font-weight — жирность шрифта шапки
+   --xpopup__content_padding    — отступы контента
+   --xpopup__content_color      — цвет текста контента
+   --xpopup__footer_background  — фон подвала
+   --xpopup__footer_border-top  — верхняя граница подвала
+   --xpopup__footer_color       — цвет текста подвала
+
+   = ЛОГИКА ЦВЕТА ИКОНОК =
+   --xpopup__ico_close_color         — крестик закрытия (inside)
+   --xpopup__ico_close_color_outside — крестик закрытия (outside)
+   --xpopup__ico_back_color          — стрелка назад
+   --xpopup__ico_actions_color       — три точки (меню действий)
+   --xpopup__ico_question_color      — знак вопроса (подсказка)
+   ============================================================ */
+
+
+/* ============================================================
+   1. SKIN: DEFAULT
+      Базовый светлый скин. Определяет все CSS-переменные.
+   ============================================================ */
+.b-xpopup_skin_default {
+    /* Общие */
+    --xpopup_border-radius: 16px;
+    --xpopup_background: #fff;
+    --xpopup_box-shadow: 0px 2px 20px -5px rgba(0, 0, 0, 0.50);
+    --xpopup_padding_base: 20px;
+
+    /* Бокс */
+    --xpopup__box_padding: 10px;
+
+    /* Шапка */
+    --xpopup__header_height: 56px;
+    --xpopup__header_background: #fafafa;
+    --xpopup__header_color: #000;
+    --xpopup__header_border-bottom: 1px solid transparent;
+    --xpopup__header_font-size: 18px;
+    --xpopup__header_font-weight: normal;
+
+    /* Контент */
+    --xpopup__content_padding: var(--xpopup_padding_base);
+    --xpopup__content_color: #212529;
+
+    /* Подвал */
+    --xpopup__footer_background: #fafafa;
+    --xpopup__footer_border-top: 1px solid #eee;
+    --xpopup__footer_color: #212529;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: #000;
+
+    /* Иконки */
+    --xpopup__ico_close_color: var(--xpopup__header_color);
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: var(--xpopup__header_color);
+    --xpopup__ico_actions_color: var(--xpopup__header_color);
+    --xpopup__ico_question_color: var(--xpopup__header_color);
+}
+
+.b-xpopup_skin_default.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding);
+    padding-bottom: var(--xpopup__box_padding);
+}
+
+.b-xpopup_skin_default .b-xpopup__content-container {
+    position: relative;
+    text-align: left;
+    min-width: 200px;
+    border-radius: var(--xpopup_border-radius);
+    box-shadow: var(--xpopup_box-shadow);
+    overflow: hidden;
+}
+
+.b-xpopup_skin_default .b-xpopup__content {
+    background: var(--xpopup_background);
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+}
+
+/* Скругления */
+.b-xpopup_skin_default.b-xpopup_has-header_true .b-xpopup__content {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+.b-xpopup_skin_default.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.b-xpopup_skin_default .b-xpopup__footer-container {
+    border-radius: 0;
+}
+.b-xpopup_skin_default.b-xpopup_has-footer_true .b-xpopup__footer-container {
+    border-bottom-left-radius: var(--xpopup_border-radius);
+    border-bottom-right-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+.b-xpopup_skin_default .b-xpopup__header {
+    border-radius: 0;
+}
+.b-xpopup_skin_default.b-xpopup_has-header_true .b-xpopup__header {
+    border-top-left-radius: var(--xpopup_border-radius);
+    border-top-right-radius: var(--xpopup_border-radius);
+}
+
+/* Шапка */
+.b-xpopup_skin_default .b-xpopup__header {
+    background: var(--xpopup__header_background);
+    border-bottom: var(--xpopup__header_border-bottom);
+    color: var(--xpopup__header_color);
+    font-weight: var(--xpopup__header_font-weight);
+    font-size: var(--xpopup__header_font-size);
+    padding: 0 calc(var(--xpopup_padding_base, 20px) + 30px) 0 var(--xpopup_padding_base, 20px);
+    height: var(--xpopup__header_height);
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+.b-xpopup_skin_default .b-xpopup__header a {
+    color: var(--xpopup__header_color);
+}
+.b-xpopup_skin_default .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.b-xpopup_skin_default .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    opacity: .7;
+}
+.b-xpopup_skin_default .b-xpopup__header-subcaption:hover {
+    opacity: 1;
+}
+.b-xpopup_skin_default .b-xpopup__header-icon {
+    font-size: 30px;
+    width: 34px;
+    margin-right: 15px;
+    overflow: hidden;
+    border-radius: 2px;
+    display: inline-flex;
+}
+.b-xpopup_skin_default .b-xpopup__header-icon i   { opacity: .7; }
+.b-xpopup_skin_default .b-xpopup__header-icon img { width: 100%; height: auto; }
+
+/* Подвал */
+.b-xpopup_skin_default .b-xpopup__footer {
+    padding: var(--xpopup_padding_base, 20px);
+    background: var(--xpopup__footer_background, #fafafa);
+    color: var(--xpopup__footer_color);
+}
+.b-xpopup_skin_default.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom: var(--xpopup__footer_border-top, 1px solid #eee);
+}
+
+.b-xpopup_skin_default .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+.b-xpopup_skin_default .b-xpopup-error {
+    border-radius: var(--xpopup_border-radius, 5px);
+}
+
+@media (max-width: 767px) {
+    .b-xpopup_skin_default {
+        --xpopup__box_padding: 0px;
+        --xpopup_border-radius: 0px;
+    }
+}
+
+
+/* ============================================================
+   2. SKIN: DEFAULT-DARK
+      Тёмная версия базового скина.
+      Чтобы применить: data-xpopup-skin='default-dark'
+   ============================================================ */
+.b-xpopup_skin_default-dark {
+    /* Общие */
+    --xpopup_border-radius: 16px;
+    --xpopup_background: #1e1e1e;
+    --xpopup_box-shadow: 0px 2px 20px -5px rgba(0, 0, 0, 0.70);
+    --xpopup_padding_base: 20px;
+
+    /* Бокс */
+    --xpopup__box_padding: 10px;
+
+    /* Шапка */
+    --xpopup__header_height: 56px;
+    --xpopup__header_background: #2d2d2d;
+    --xpopup__header_color: #e0e0e0;
+    --xpopup__header_border-bottom: 1px solid #3d3d3d;
+    --xpopup__header_font-size: 18px;
+    --xpopup__header_font-weight: normal;
+
+    /* Контент */
+    --xpopup__content_padding: var(--xpopup_padding_base);
+    --xpopup__content_color: #e0e0e0;
+
+    /* Подвал */
+    --xpopup__footer_background: #2d2d2d;
+    --xpopup__footer_border-top: 1px solid #3d3d3d;
+    --xpopup__footer_color: #e0e0e0;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: #e0e0e0;
+
+    /* Иконки */
+    --xpopup__ico_close_color: #e0e0e0;
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: #e0e0e0;
+    --xpopup__ico_actions_color: #e0e0e0;
+    --xpopup__ico_question_color: #e0e0e0;
+}
+
+.b-xpopup_skin_default-dark.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding, 10px);
+    padding-bottom: var(--xpopup__box_padding, 10px);
+}
+
+.b-xpopup_skin_default-dark .b-xpopup__content-container {
+    position: relative;
+    text-align: left;
+    min-width: 200px;
+    border-radius: var(--xpopup_border-radius);
+    box-shadow: var(--xpopup_box-shadow);
+    overflow: hidden;
+}
+
+.b-xpopup_skin_default-dark .b-xpopup__content {
+    background: var(--xpopup_background);
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+}
+
+/* Скругления */
+.b-xpopup_skin_default-dark.b-xpopup_has-header_true .b-xpopup__content {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+.b-xpopup_skin_default-dark.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.b-xpopup_skin_default-dark .b-xpopup__footer-container {
+    border-radius: 0;
+}
+.b-xpopup_skin_default-dark.b-xpopup_has-footer_true .b-xpopup__footer-container {
+    border-bottom-left-radius: var(--xpopup_border-radius);
+    border-bottom-right-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+.b-xpopup_skin_default-dark .b-xpopup__header {
+    border-radius: 0;
+}
+.b-xpopup_skin_default-dark.b-xpopup_has-header_true .b-xpopup__header {
+    border-top-left-radius: var(--xpopup_border-radius);
+    border-top-right-radius: var(--xpopup_border-radius);
+}
+
+/* Шапка */
+.b-xpopup_skin_default-dark .b-xpopup__header {
+    background: var(--xpopup__header_background);
+    /* border-bottom: var(--xpopup__header_border-bottom); */
+    color: var(--xpopup__header_color);
+    font-weight: var(--xpopup__header_font-weight);
+    font-size: var(--xpopup__header_font-size);
+    padding: 0 calc(var(--xpopup_padding_base, 20px) + 30px) 0 var(--xpopup_padding_base, 20px);
+    height: var(--xpopup__header_height);
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+.b-xpopup_skin_default-dark .b-xpopup__header a {
+    color: var(--xpopup__header_color);
+}
+.b-xpopup_skin_default-dark .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.b-xpopup_skin_default-dark .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    opacity: .6;
+}
+.b-xpopup_skin_default-dark .b-xpopup__header-icon {
+    font-size: 30px;
+    width: 34px;
+    margin-right: 15px;
+    overflow: hidden;
+    border-radius: 2px;
+    display: inline-flex;
+}
+.b-xpopup_skin_default-dark .b-xpopup__header-icon i   { opacity: .7; }
+.b-xpopup_skin_default-dark .b-xpopup__header-icon img { width: 100%; height: auto; }
+
+/* Подвал */
+.b-xpopup_skin_default-dark .b-xpopup__footer {
+    padding: var(--xpopup_padding_base, 20px);
+    background: var(--xpopup__footer_background);
+    color: var(--xpopup__footer_color);
+}
+/* .b-xpopup_skin_default-dark.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom: var(--xpopup__footer_border-top);
+} */
+
+.b-xpopup_skin_default-dark .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+.b-xpopup_skin_default-dark .b-xpopup-error {
+    border-radius: var(--xpopup_border-radius, 5px);
+}
+
+@media (max-width: 767px) {
+    .b-xpopup_skin_default-dark {
+        --xpopup__box_padding: 0px;
+        --xpopup_border-radius: 0px;
+    }
+}
+
+
+/* ============================================================
+   3. SKIN: STRONG
+      Светлый строгий. Заголовок uppercase, без скруглений.
+   ============================================================ */
+.b-xpopup_skin_strong {
+    /* Общие */
+    --xpopup_border-radius: 0px;
+    --xpopup_background: #fff;
+    --xpopup_box-shadow: 0px 2px 20px -5px rgba(0, 0, 0, 0.50);
+    --xpopup_padding_base: 20px;
+
+    /* Бокс */
+    --xpopup__box_padding: 10px;
+
+    /* Шапка */
+    --xpopup__header_height: 56px;
+    --xpopup__header_background: #fff;
+    --xpopup__header_color: #000;
+    --xpopup__header_border-bottom: 1px solid #f2f2f2;
+    --xpopup__header_font-size: 13px;
+    --xpopup__header_font-weight: 500;
+
+    /* Контент */
+    --xpopup__content_padding: var(--xpopup_padding_base);
+    --xpopup__content_color: #212529;
+
+    /* Подвал */
+    --xpopup__footer_background: #fafafa;
+    --xpopup__footer_border-top: 1px solid #eee;
+    --xpopup__footer_color: #212529;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: rgba(0, 0, 0, .7);
+
+    /* Иконки */
+    --xpopup__ico_close_color: #000;
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: #000;
+    --xpopup__ico_actions_color: #000;
+    --xpopup__ico_question_color: #000;
+}
+
+.b-xpopup_skin_strong.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding);
+    padding-bottom: var(--xpopup__box_padding);
+}
+
+.b-xpopup_skin_strong .b-xpopup__content-container {
+    position: relative;
+    text-align: left;
+    min-width: 200px;
+    background: var(--xpopup_background);
+    box-shadow: var(--xpopup_box-shadow);
+    border-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+
+.b-xpopup_skin_strong .b-xpopup__content {
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+}
+
+/* Скругления (нет) */
+.b-xpopup_skin_strong.b-xpopup_has-header_true .b-xpopup__content {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+.b-xpopup_skin_strong.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Шапка */
+.b-xpopup_skin_strong .b-xpopup__header {
+    background: var(--xpopup__header_background);
+    border-bottom: var(--xpopup__header_border-bottom);
+    color: var(--xpopup__header_color);
+    text-transform: uppercase;
+    font-size: var(--xpopup__header_font-size);
+    font-weight: var(--xpopup__header_font-weight);
+    border-radius: 0;
+    padding: 0 50px 0 20px;
+    height: var(--xpopup__header_height);
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+.b-xpopup_skin_strong .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.b-xpopup_skin_strong .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    opacity: .5;
+}
+.b-xpopup_skin_strong .b-xpopup__header-icon {
+    font-size: 30px;
+    width: 34px;
+    margin-right: 15px;
+    overflow: hidden;
+    border-radius: 2px;
+    display: inline-flex;
+}
+.b-xpopup_skin_strong .b-xpopup__header-icon i   { opacity: .7; }
+.b-xpopup_skin_strong .b-xpopup__header-icon img { width: 100%; height: auto; }
+
+.b-xpopup_skin_strong .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+/* Подвал */
+.b-xpopup_skin_strong .b-xpopup__footer {
+    padding: var(--xpopup_padding_base);
+    background: var(--xpopup__footer_background);
+    color: var(--xpopup__footer_color);
+}
+.b-xpopup_skin_strong.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom: var(--xpopup__footer_border-top);
+}
+
+
+/* ============================================================
+   4. SKIN: VK
+      Стиль ВКонтакте: синий заголовок, светлый фон.
+   ============================================================ */
+.b-xpopup_skin_vk {
+    /* Общие */
+    --xpopup_border-radius: 8px;  /* VK по умолчанию без скруглений, можно изменить */
+    --xpopup_background: #F7F7F7;
+    --xpopup_box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.50);
+    --xpopup_padding_base: 20px;
+
+    /* Бокс */
+    --xpopup__box_padding: 10px;
+
+    /* Шапка */
+    --xpopup__header_height: 56px;
+    --xpopup__header_background: #5a88bd;
+    --xpopup__header_color: #fff;
+    --xpopup__header_border-bottom: none;
+    --xpopup__header_font-size: 16px;
+    --xpopup__header_font-weight: normal;
+
+    /* Контент */
+    --xpopup__content_padding: var(--xpopup_padding_base);
+    --xpopup__content_color: #212529;
+
+    /* Подвал */
+    --xpopup__footer_background: #fff;
+    --xpopup__footer_border-top: 1px solid #eee;
+    --xpopup__footer_color: #212529;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: #fff;
+
+    /* Иконки */
+    --xpopup__ico_close_color: #fff;
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: #fff;
+    --xpopup__ico_actions_color: #fff;
+    --xpopup__ico_question_color: #fff;
+}
+
+.b-xpopup_skin_vk.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding);
+    padding-bottom: var(--xpopup__box_padding);
+}
+
+.b-xpopup_skin_vk .b-xpopup__content-container {
+    min-width: 200px;
+    background: var(--xpopup_background);
+    box-shadow: var(--xpopup_box-shadow);
+    border-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+
+.b-xpopup_skin_vk .b-xpopup__content {
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+}
+
+@media (max-width: 480px) {
+    .b-xpopup_skin_vk .b-xpopup__content {
+        padding: 0;
+    }
+}
+
+/* === СКРУГЛЕНИЯ === */
+
+/* Если есть header — убираем скругления сверху у контента */
+.b-xpopup_skin_vk.b-xpopup_has-header_true .b-xpopup__content {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+/* Если есть footer — убираем скругления снизу у контента */
+.b-xpopup_skin_vk.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Footer-container по умолчанию без скруглений */
+.b-xpopup_skin_vk .b-xpopup__footer-container {
+    border-radius: 0;
+}
+
+/* Если есть footer — добавляем скругления снизу */
+.b-xpopup_skin_vk.b-xpopup_has-footer_true .b-xpopup__footer-container {
+    border-bottom-left-radius: var(--xpopup_border-radius);
+    border-bottom-right-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+
+/* Header по умолчанию без скруглений */
+.b-xpopup_skin_vk .b-xpopup__header {
+    border-radius: 0;
+}
+
+/* Если есть header — добавляем скругления сверху */
+.b-xpopup_skin_vk.b-xpopup_has-header_true .b-xpopup__header {
+    border-top-left-radius: var(--xpopup_border-radius);
+    border-top-right-radius: var(--xpopup_border-radius);
+}
+
+/* === ШАПКА === */
+.b-xpopup_skin_vk .b-xpopup__header {
+    background: var(--xpopup__header_background);
+    color: var(--xpopup__header_color);
+    font-weight: var(--xpopup__header_font-weight);
+    font-size: var(--xpopup__header_font-size);
+    padding: 0 50px 0 20px;
+    display: grid;
+    align-content: center;
+    height: var(--xpopup__header_height);
+    line-height: 1.2;
+}
+
+.b-xpopup_skin_vk .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.b-xpopup_skin_vk .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    color: rgba(255, 255, 255, .7);
+}
+
+.b-xpopup_skin_vk .b-xpopup__header-icon {
+    font-size: 30px;
+    width: 34px;
+    margin-right: 15px;
+    overflow: hidden;
+    border-radius: 3px;
+    display: inline-flex;
+}
+.b-xpopup_skin_vk .b-xpopup__header-icon i   { opacity: .7; }
+.b-xpopup_skin_vk .b-xpopup__header-icon img { max-height: 100%; width: auto; }
+
+/* === ПОДВАЛ === */
+.b-xpopup_skin_vk .b-xpopup__footer {
+    padding: var(--xpopup_padding_base);
+    background: var(--xpopup__footer_background);
+    color: var(--xpopup__footer_color);
+}
+
+.b-xpopup_skin_vk.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom: var(--xpopup__footer_border-top);
+}
+
+/* === КНОПКА ЗАКРЫТИЯ === */
+.b-xpopup_skin_vk .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+/* === ОШИБКИ === */
+.b-xpopup_skin_vk .b-xpopup-error {
+    border-radius: var(--xpopup_border-radius);
+}
+
+/* ============================================================
+   5. SKIN: LITE
+      Лёгкий: без фона, без отступов. Для изображений и iframe.
+   ============================================================ */
+.b-xpopup_skin_lite {
+    /* Общие */
+    --xpopup_border-radius: 0px;
+    --xpopup_background: transparent;
+    --xpopup_box-shadow: none;
+    --xpopup_padding_base: 15px;
+
+    /* Бокс */
+    --xpopup__box_padding: 0px;
+
+    /* Шапка */
+    --xpopup__header_height: 50px;
+    --xpopup__header_background: transparent;
+    --xpopup__header_color: #fff;
+    --xpopup__header_border-bottom: none;
+    --xpopup__header_font-size: 14px;
+    --xpopup__header_font-weight: normal;
+
+    /* Контент */
+    --xpopup__content_padding: 0;
+    --xpopup__content_color: #fff;
+
+    /* Подвал */
+    --xpopup__footer_background: transparent;
+    --xpopup__footer_border-top: none;
+    --xpopup__footer_color: #fff;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: #fff;
+
+    /* Иконки */
+    --xpopup__ico_close_color: #fff;
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: #fff;
+    --xpopup__ico_actions_color: #fff;
+    --xpopup__ico_question_color: #fff;
+}
+
+.b-xpopup_skin_lite.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding);
+    padding-bottom: var(--xpopup__box_padding);
+}
+
+.b-xpopup_skin_lite .b-xpopup__content-container {
+    position: relative;
+    min-width: 200px;
+    border-radius: var(--xpopup_border-radius);
+}
+
+.b-xpopup_skin_lite .b-xpopup__content {
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+}
+
+.b-xpopup_skin_lite .b-xpopup__header {
+    color: var(--xpopup__header_color);
+    text-shadow: 0 0 1px #222;
+    font-size: var(--xpopup__header_font-size);
+    text-transform: uppercase;
+    text-align: center;
+    border-radius: 0;
+    padding: 10px 15px;
+    min-width: 300px;
+    height: var(--xpopup__header_height);
+}
+
+.b-xpopup_skin_lite .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 7px;
+}
+
+.b-xpopup_skin_lite .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    color: rgba(255, 255, 255, .7);
+}
+
+.b-xpopup_skin_lite .b-xpopup__header-icon {
+    font-size: 30px;
+    width: 34px;
+    margin-right: 15px;
+    overflow: hidden;
+    border-radius: 2px;
+    display: inline-flex;
+}
+
+.b-xpopup_skin_lite .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+.b-xpopup_skin_lite .b-xpopup__footer {
+    padding: var(--xpopup_padding_base);
+    background: var(--xpopup__footer_background);
+    color: var(--xpopup__footer_color);
+}
+
+.b-xpopup_skin_lite .b-xpopup-image {
+    background: #00000075;
+    color: #fff;
+    text-align: center;
+    display: flex;
+}
+.b-xpopup_skin_lite .b-xpopup__image-text {
+    margin: auto;
+}
+.b-xpopup_skin_lite.b-xpopup_type_image .b-xpopup__close_type_inside {
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 35px;
+}
+
+.b-xpopup_skin_lite.b-xpopup_type_iframe iframe {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+    background: #fff;
+}
+
+.b-xpopup_skin_lite .b-xpopup-loader_type_in {
+    background: none;
+}
+
+
+/* ============================================================
+   6. SKIN: IOS
+      В стилистике современных iOS-попапов.
+      Размытый фон (backdrop-filter), большие скругления,
+      системный шрифт, лёгкая тень.
+   ============================================================ */
+.b-xpopup_skin_ios {
+    /* Общие */
+    --xpopup_border-radius: 14px;
+    --xpopup_background: rgba(255, 255, 255, 0.95);
+    --xpopup_box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 24px rgba(0, 0, 0, 0.12);
+    --xpopup_padding_base: 20px;
+
+    /* Бокс */
+    --xpopup__box_padding: 16px;
+
+    /* Шапка */
+    --xpopup__header_height: 52px;
+    --xpopup__header_background: transparent;
+    --xpopup__header_color: #000;
+    --xpopup__header_border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    --xpopup__header_font-size: 17px;
+    --xpopup__header_font-weight: 600;
+
+    /* Контент */
+    --xpopup__content_padding: var(--xpopup_padding_base);
+    --xpopup__content_color: #1d1d1f;
+
+    /* Подвал */
+    --xpopup__footer_background: rgba(242, 242, 247, 0.8);
+    --xpopup__footer_border-top: 1px solid rgba(0, 0, 0, 0.08);
+    --xpopup__footer_color: #1d1d1f;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: #8e8e93;
+
+    /* Иконки */
+    --xpopup__ico_close_color: #8e8e93;
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: #007aff;
+    --xpopup__ico_actions_color: #8e8e93;
+    --xpopup__ico_question_color: #8e8e93;
+}
+
+.b-xpopup_skin_ios.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding);
+    padding-bottom: var(--xpopup__box_padding);
+}
+
+.b-xpopup_skin_ios .b-xpopup__content-container {
+    position: relative;
+    text-align: left;
+    min-width: 200px;
+    border-radius: var(--xpopup_border-radius);
+    box-shadow: var(--xpopup_box-shadow);
+    overflow: hidden;
+    /* Размытый фон */
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+}
+
+.b-xpopup_skin_ios .b-xpopup__content {
+    background: transparent;
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+}
+
+/* Скругления */
+.b-xpopup_skin_ios.b-xpopup_has-header_true .b-xpopup__content {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+.b-xpopup_skin_ios.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.b-xpopup_skin_ios .b-xpopup__footer-container {
+    border-radius: 0;
+}
+.b-xpopup_skin_ios.b-xpopup_has-footer_true .b-xpopup__footer-container {
+    border-bottom-left-radius: var(--xpopup_border-radius);
+    border-bottom-right-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+.b-xpopup_skin_ios .b-xpopup__header {
+    border-radius: 0;
+}
+.b-xpopup_skin_ios.b-xpopup_has-header_true .b-xpopup__header {
+    border-top-left-radius: var(--xpopup_border-radius);
+    border-top-right-radius: var(--xpopup_border-radius);
+}
+
+/* Шапка */
+.b-xpopup_skin_ios .b-xpopup__header {
+    background: var(--xpopup__header_background);
+    border-bottom: var(--xpopup__header_border-bottom);
+    color: var(--xpopup__header_color);
+    font-weight: var(--xpopup__header_font-weight);
+    font-size: var(--xpopup__header_font-size);
+    padding: 0 calc(var(--xpopup_padding_base, 20px) + 30px) 0 var(--xpopup_padding_base, 20px);
+    height: var(--xpopup__header_height);
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+}
+.b-xpopup_skin_ios .b-xpopup__header a {
+    color: var(--xpopup__header_color);
+}
+.b-xpopup_skin_ios .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.b-xpopup_skin_ios .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    opacity: .6;
+}
+.b-xpopup_skin_ios .b-xpopup__header-icon {
+    font-size: 28px;
+    width: 32px;
+    margin-right: 12px;
+    overflow: hidden;
+    border-radius: 7px;
+    display: inline-flex;
+}
+
+/* Подвал */
+.b-xpopup_skin_ios .b-xpopup__footer {
+    padding: var(--xpopup_padding_base);
+    background: var(--xpopup__footer_background);
+    color: var(--xpopup__footer_color);
+}
+.b-xpopup_skin_ios.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom: var(--xpopup__footer_border-top);
+}
+
+.b-xpopup_skin_ios .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+.b-xpopup_skin_ios .b-xpopup-error {
+    border-radius: var(--xpopup_border-radius);
+}
+
+@media (max-width: 767px) {
+    .b-xpopup_skin_ios {
+        --xpopup__box_padding: 0px;
+        --xpopup_border-radius: 0px;
+    }
+}
+
+
+/* ============================================================
+   7. SKIN: MATERIAL3
+      В стилистике Material Design 3.
+      Крупные скругления, тени с elevation, цветовая схема M3.
+   ============================================================ */
+.b-xpopup_skin_material3 {
+    /* Общие */
+    --xpopup_border-radius: 16px;
+    --xpopup_background: #fffbfe;
+    --xpopup_box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+    --xpopup_padding_base: 24px;
+
+    /* Бокс */
+    --xpopup__box_padding: 16px;
+
+    /* Шапка */
+    --xpopup__header_height: 56px;
+    --xpopup__header_background: #f7f2fa;
+    --xpopup__header_color: #1d1b20;
+    --xpopup__header_border-bottom: none;
+    --xpopup__header_font-size: 16px;
+    --xpopup__header_font-weight: 500;
+
+    /* Контент */
+    --xpopup__content_padding: var(--xpopup_padding_base);
+    --xpopup__content_color: #1d1b20;
+
+    /* Подвал */
+    --xpopup__footer_background: #f7f2fa;
+    --xpopup__footer_border-top: 1px solid #e7e0ec;
+    --xpopup__footer_color: #1d1b20;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: #49454f;
+
+    /* Иконки */
+    --xpopup__ico_close_color: #49454f;
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: #6750a4;
+    --xpopup__ico_actions_color: #49454f;
+    --xpopup__ico_question_color: #49454f;
+}
+
+.b-xpopup_skin_material3.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding);
+    padding-bottom: var(--xpopup__box_padding);
+}
+
+.b-xpopup_skin_material3 .b-xpopup__content-container {
+    position: relative;
+    text-align: left;
+    min-width: 200px;
+    border-radius: var(--xpopup_border-radius);
+    box-shadow: var(--xpopup_box-shadow);
+    overflow: hidden;
+}
+
+.b-xpopup_skin_material3 .b-xpopup__content {
+    background: var(--xpopup_background);
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+    font-family: "Roboto", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Скругления */
+.b-xpopup_skin_material3.b-xpopup_has-header_true .b-xpopup__content {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+.b-xpopup_skin_material3.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.b-xpopup_skin_material3 .b-xpopup__footer-container {
+    border-radius: 0;
+}
+.b-xpopup_skin_material3.b-xpopup_has-footer_true .b-xpopup__footer-container {
+    border-bottom-left-radius: var(--xpopup_border-radius);
+    border-bottom-right-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+.b-xpopup_skin_material3 .b-xpopup__header {
+    border-radius: 0;
+}
+.b-xpopup_skin_material3.b-xpopup_has-header_true .b-xpopup__header {
+    border-top-left-radius: var(--xpopup_border-radius);
+    border-top-right-radius: var(--xpopup_border-radius);
+}
+
+/* Шапка */
+.b-xpopup_skin_material3 .b-xpopup__header {
+    background: var(--xpopup__header_background);
+    border-bottom: var(--xpopup__header_border-bottom);
+    color: var(--xpopup__header_color);
+    font-weight: var(--xpopup__header_font-weight);
+    font-size: var(--xpopup__header_font-size);
+    padding: 0 calc(var(--xpopup_padding_base, 24px) + 30px) 0 var(--xpopup_padding_base, 24px);
+    height: var(--xpopup__header_height);
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+.b-xpopup_skin_material3 .b-xpopup__header a {
+    color: var(--xpopup__header_color);
+}
+.b-xpopup_skin_material3 .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.b-xpopup_skin_material3 .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    opacity: .6;
+}
+.b-xpopup_skin_material3 .b-xpopup__header-icon {
+    font-size: 28px;
+    width: 32px;
+    margin-right: 16px;
+    overflow: hidden;
+    border-radius: 8px;
+    display: inline-flex;
+}
+
+/* Подвал */
+.b-xpopup_skin_material3 .b-xpopup__footer {
+    padding: var(--xpopup_padding_base);
+    background: var(--xpopup__footer_background);
+    color: var(--xpopup__footer_color);
+}
+.b-xpopup_skin_material3.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom: var(--xpopup__footer_border-top);
+}
+
+.b-xpopup_skin_material3 .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+.b-xpopup_skin_material3 .b-xpopup-error {
+    border-radius: var(--xpopup_border-radius);
+}
+
+@media (max-width: 767px) {
+    .b-xpopup_skin_material3 {
+        --xpopup__box_padding: 0px;
+        --xpopup_border-radius: 0px;
+    }
+}
+
+
+/* ============================================================
+   8. SKIN: YA
+      В стилистике Яндекс попапов.
+      Белый фон, заметная тень, минималистичная шапка,
+      акцентный цвет Яндекса (#fc3f1d).
+   ============================================================ */
+.b-xpopup_skin_ya {
+    /* Общие */
+    --xpopup_border-radius: 8px;
+    --xpopup_background: #fff;
+    --xpopup_box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.16);
+    --xpopup_padding_base: 20px;
+
+    /* Бокс */
+    --xpopup__box_padding: 10px;
+
+    /* Шапка */
+    --xpopup__header_height: 56px;
+    --xpopup__header_background: #fff;
+    --xpopup__header_color: #000;
+    --xpopup__header_border-bottom: 1px solid #f0f0f0;
+    --xpopup__header_font-size: 16px;
+    --xpopup__header_font-weight: 500;
+
+    /* Контент */
+    --xpopup__content_padding: var(--xpopup_padding_base);
+    --xpopup__content_color: #000;
+
+    /* Подвал */
+    --xpopup__footer_background: #fafafa;
+    --xpopup__footer_border-top: 1px solid #f0f0f0;
+    --xpopup__footer_color: #000;
+
+    /* Кнопка закрытия */
+    --xpopup__close_type_inside: #999;
+
+    /* Иконки */
+    --xpopup__ico_close_color: #999;
+    --xpopup__ico_close_color_outside: #fff;
+    --xpopup__ico_back_color: #fc3f1d;
+    --xpopup__ico_actions_color: #999;
+    --xpopup__ico_question_color: #999;
+}
+
+.b-xpopup_skin_ya.b-xpopup__box {
+    padding-top: var(--xpopup__box_padding);
+    padding-bottom: var(--xpopup__box_padding);
+}
+
+.b-xpopup_skin_ya .b-xpopup__content-container {
+    position: relative;
+    text-align: left;
+    min-width: 200px;
+    border-radius: var(--xpopup_border-radius);
+    box-shadow: var(--xpopup_box-shadow);
+    overflow: hidden;
+}
+
+.b-xpopup_skin_ya .b-xpopup__content {
+    background: var(--xpopup_background);
+    padding: var(--xpopup__content_padding);
+    color: var(--xpopup__content_color);
+    font-family: "YS Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Скругления */
+.b-xpopup_skin_ya.b-xpopup_has-header_true .b-xpopup__content {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+.b-xpopup_skin_ya.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.b-xpopup_skin_ya .b-xpopup__footer-container {
+    border-radius: 0;
+}
+.b-xpopup_skin_ya.b-xpopup_has-footer_true .b-xpopup__footer-container {
+    border-bottom-left-radius: var(--xpopup_border-radius);
+    border-bottom-right-radius: var(--xpopup_border-radius);
+    overflow: hidden;
+}
+.b-xpopup_skin_ya .b-xpopup__header {
+    border-radius: 0;
+}
+.b-xpopup_skin_ya.b-xpopup_has-header_true .b-xpopup__header {
+    border-top-left-radius: var(--xpopup_border-radius);
+    border-top-right-radius: var(--xpopup_border-radius);
+}
+
+/* Шапка */
+.b-xpopup_skin_ya .b-xpopup__header {
+    background: var(--xpopup__header_background);
+    border-bottom: var(--xpopup__header_border-bottom);
+    color: var(--xpopup__header_color);
+    font-weight: var(--xpopup__header_font-weight);
+    font-size: var(--xpopup__header_font-size);
+    padding: 0 calc(var(--xpopup_padding_base, 20px) + 30px) 0 var(--xpopup_padding_base, 20px);
+    height: var(--xpopup__header_height);
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+.b-xpopup_skin_ya .b-xpopup__header a {
+    color: var(--xpopup__header_color);
+}
+.b-xpopup_skin_ya .b-xpopup__header-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.b-xpopup_skin_ya .b-xpopup__header-subcaption {
+    font-size: .72em;
+    font-weight: normal;
+    opacity: .5;
+}
+.b-xpopup_skin_ya .b-xpopup__header-icon {
+    font-size: 28px;
+    width: 32px;
+    margin-right: 12px;
+    overflow: hidden;
+    border-radius: 4px;
+    display: inline-flex;
+}
+
+/* Подвал */
+.b-xpopup_skin_ya .b-xpopup__footer {
+    padding: var(--xpopup_padding_base);
+    background: var(--xpopup__footer_background);
+    color: var(--xpopup__footer_color);
+}
+.b-xpopup_skin_ya.b-xpopup_has-footer_true .b-xpopup__content {
+    border-bottom: var(--xpopup__footer_border-top);
+}
+
+.b-xpopup_skin_ya .b-xpopup__close_type_inside {
+    color: var(--xpopup__close_type_inside);
+}
+
+.b-xpopup_skin_ya .b-xpopup-error {
+    border-radius: var(--xpopup_border-radius);
+}
+
+@media (max-width: 767px) {
+    .b-xpopup_skin_ya {
+        --xpopup__box_padding: 0px;
+        --xpopup_border-radius: 0px;
+    }
+}
+
+
+/* ============================================================
+   9. МОДИФИКАТОРЫ СКИНОВ (skinmod)
+      Применяются совместно с любым скином.
+      Пример: data-xpopup-skin-mod='no-border.header-center'
+   ============================================================ */
+
+.b-xpopup_skinmod_content-container-overflow .b-xpopup__content-container {
+    overflow: hidden !important;
+}
+
+.b-xpopup_skinmod_content-background-transparent .b-xpopup__content-container,
+.b-xpopup_skinmod_content-background-transparent .b-xpopup__content {
+    background: unset !important;
+}
+
+.b-xpopup_skinmod_no-border .b-xpopup__content {
+    padding: 0 !important;
+}
+
+.b-xpopup_skinmod_with-border .b-xpopup__content {
+    padding: 20px !important;
+}
+
+.b-xpopup_skinmod_header-center .b-xpopup__header {
+    justify-content: center;
+}
+
+.b-xpopup_skinmod_header-uppercase .b-xpopup__header {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.b-xpopup_skinmod_header-bold .b-xpopup__header {
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .b-xpopup_skinmod_big-padding .b-xpopup__content {
+        padding: 40px !important;
+    }
+
+    .b-xpopup_skinmod_big-padding .b-xpopup__header {
+        padding: 10px 65px 10px 40px;
+    }
+
+    .b-xpopup_skinmod_big-padding .b-xpopup__footer {
+        padding: 20px 40px;
+    }
+
+    .b-xpopup_skinmod_big-padding .b-xpopup__close_type_inside {
+        right: 20px;
+    }
+}
