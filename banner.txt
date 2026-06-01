@@ -1,5 +1,5 @@
 /*! 
- * XPopup v3.2.1 2026-05-24
+ * XPopup v3.3.42 2026-06-01
  * Copyright (c) 2014 Denis Anokhin, Maxim Anokhin, [xmmgroup](https://xmmgroup.ru)
  *
  * XPopup website: https://xpopup.site
