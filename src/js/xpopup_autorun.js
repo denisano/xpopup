@@ -1,6 +1,6 @@
 (function ($) {
     const xpopupApi = $.xpopup;
-    const DEBUG = $.xpopup.DEBUG;
+    const DEBUG = xpopupApi.defaults.debug;
 
     /**
      * Реализация автооткрытия xpopup-окна.
