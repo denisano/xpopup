@@ -195,15 +195,17 @@
       this.detachedElementsData = {}; // объект для хранения данных о временно удалённых элементах, ключ - уникальный идентификатор окна, значение - объект с данными элемента
     }
 
-    _putDetachedElementsBack(elements) {
-      Object.keys(this.detachedElementsData).forEach((winId) => {
-        const detachedElementData = this.detachedElementsData[winId];
-        console.debug(
-          "_putDetachedElementsBack forEach() called",
-          winId,
-          detachedElementData,
-        );
+    _putDetachedElementsBack(elements, winData) {
+      // Object.keys(this.detachedElementsData).forEach((winId) => {
+      const winId = winData.id;
+      const detachedElementData = this.detachedElementsData[winId];
+      console.debug(
+        "_putDetachedElementsBack forEach() called",
+        winId,
+        detachedElementData,
+      );
 
+      if (detachedElementData) {
         const $_el = detachedElementData.$detachedElement.detach();
         if (detachedElementData.detachedElementVisibility === false) {
           $_el.hide();
@@ -215,7 +217,8 @@
         }
 
         delete this.detachedElementsData[winId];
-      });
+      }
+      // });
     }
 
     /**
@@ -227,14 +230,14 @@
       const el = st.getElements();
 
       // После закрытия бокса обязательно вернём все detached элементы обратно
-      this._putDetachedElementsBack(el);
+      this._putDetachedElementsBack(el, winData);
     }
 
     disposeContent(activeWinData, elements) {
       if (xpopupApi.isDebug())
         console.debug("XpopupInlineContent.disposeContent()", activeWinData);
 
-      this._putDetachedElementsBack(elements);
+      this._putDetachedElementsBack(elements, activeWinData);
 
       if (elements.$header) {
         elements.$header.remove();
@@ -259,16 +262,34 @@
         $.xpopup.callDelayed(
           "XpopupInlineContent._fetchAndBuildContent",
           function () {
-            plugin._fetchAndBuildContent(winData, st, elements, successCallback, errorCallback);
+            plugin._fetchAndBuildContent(
+              winData,
+              st,
+              elements,
+              successCallback,
+              errorCallback,
+            );
           },
           winData.opts.minLoadingTimeout,
         );
       } else {
-        plugin._fetchAndBuildContent(winData, st, elements, successCallback, errorCallback);
+        plugin._fetchAndBuildContent(
+          winData,
+          st,
+          elements,
+          successCallback,
+          errorCallback,
+        );
       }
     }
 
-    _fetchAndBuildContent(winData, st, elements, successCallback, errorCallback) {
+    _fetchAndBuildContent(
+      winData,
+      st,
+      elements,
+      successCallback,
+      errorCallback,
+    ) {
       const plugin = this;
 
       //В этом месте мы как бы делаем запрос на получение данных и ждём результат (хотя для inline ожидение не требуется)
