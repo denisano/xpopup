@@ -158,6 +158,24 @@
       el.$boxHtmlContainer = $("html");
       el.$boxAndBg.prependTo(el.$boxContainer);
 
+      // Компенсация ширины скроллбара при блокировке body
+      // Применяем отступ только если скроллбар реально виден
+      const hasScrollbar =
+        document.documentElement.scrollHeight > window.innerHeight;
+      const scrollbarWidth = win._getScrollbarSize();
+
+      if (hasScrollbar && scrollbarWidth > 0) {
+        el.$boxContainer.css({
+          marginRight: scrollbarWidth + "px",
+          overflow: "hidden",
+        });
+      } else {
+        // Нет скроллбара — просто скрываем, без компенсации
+        el.$boxContainer.css({
+          overflow: "hidden",
+        });
+      }
+
       // ===================================================================
       // Z-INDEX
       // ===================================================================
@@ -193,7 +211,7 @@
       const plugin = $.xpopup.pluginGetContentTypePlugin(winData.opts.type);
       plugin.disposeContent(winData, el);
       st.deleteBox();
-      st.clearElements();
+      // st.clearElements();
 
       // очищаем ResizeObserver перед удалением элементов
       if (el._resizeObserver) {
@@ -203,7 +221,7 @@
 
       //Удалим и очистим элементы и события
       // el.$boxAndBg.remove();
-      st.clearElements();
+      // st.clearElements();
       $document.add($window).off($.xpopup.EVENT_NS);
     }
 
@@ -1001,15 +1019,10 @@
     _performRender(winData, oldWinData) {
       const win = this;
       const st = this.getStorage();
-      const el = st.getElements();
+      let el = st.getElements();
       let boxData = st.getBox();
 
       $.xpopup.emit($.xpopup.EVENT_WINDOW_RENDER_CONTENT_BEFORE);
-
-      // Показываем бокс — контент готов к отображению
-      if (el.$box) {
-        el.$box.css("visibility", "visible");
-      }
 
       // Перестраиваем результирующие опции с учётом контента
       win._rebuildWindowData(winData);
@@ -1039,6 +1052,12 @@
       // Вставка контента
       win.setContent(winData, oldWinData);
       win._updateBoxSize();
+
+      // Показываем бокс — контент готов к отображению
+      if (el.$box) {
+        el.$box.css("visibility", "visible");
+      }
+
       // контент добавлен в dom-модель, можно запускать анимацию его отображения (если анимация требуется)
       const boxAnimPromise = win._updateBoxAnimation("box-open");
       //Если есть анимация открытия бокса, то расчёт позиции outsize closeBtn только после завершения анимации и уточнения размеров окна
@@ -1094,7 +1113,7 @@
     setContent(winData, oldWinData) {
       const win = this;
       const st = win.getStorage();
-      const el = st.getElements();
+      const el = st.getElements(winData);
 
       const newContent = winData.opts.html;
       const type = winData.opts.type;
@@ -1518,9 +1537,9 @@
 
       $.xpopup.emit($.xpopup.EVENT_BOX_CLOSING);
 
-      st.setBoxNewWindow(null);
+      // st.setBoxNewWindow(null);
 
-      win.setWindowStatus("closed");
+      // win.setWindowStatus("closed");
 
       // ===================================================================
       // HISTORY API
@@ -1580,9 +1599,9 @@
           );
           $document.add($window).off($.xpopup.EVENT_NS);
           $.xpopup.emit($.xpopup.EVENT_POPUP_CLOSED);
-
-          win._removeBoxElements(winData);
         }
+        win._removeBoxElements(winData);
+        win.setWindowStatus("closed");
       };
 
       // ===================================================================
