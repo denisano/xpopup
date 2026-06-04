@@ -85,8 +85,10 @@
       if (xpopupApi.isDebug())
         console.debug("XpopupAjaxContent.disposeContent()", activeWinData);
 
-      elements.$content.hide().remove();
-      elements.$content = null;
+      if (elements.$content) {
+        elements.$content.hide().remove();
+        elements.$content = null;
+      }
       if (elements.$header) {
         elements.$header.remove();
         elements.$header = null;
@@ -430,8 +432,10 @@
       if (xpopupApi.isDebug())
         console.debug("XpopupImageContent.disposeContent()", activeWinData);
 
-      elements.$content.hide().remove();
-      elements.$content = null;
+      if (elements.$content) {
+        elements.$content.hide().remove();
+        elements.$content = null;
+      }
       if (elements.$header) {
         elements.$header.remove();
         elements.$header = null;
@@ -755,8 +759,10 @@
       if (xpopupApi.isDebug())
         console.debug("XpopupIframeContent.disposeContent()", activeWinData);
 
-      elements.$content.hide().remove();
-      elements.$content = null;
+      if (elements.$content) {
+        elements.$content.hide().remove();
+        elements.$content = null;
+      }
       if (elements.$header) {
         elements.$header.remove();
         elements.$header = null;
