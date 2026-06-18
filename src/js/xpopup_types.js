@@ -380,7 +380,7 @@
         markup: this.markup,
         sizeMode: "screen",
         closeOnBgClick: true,
-        // closeBtnType: 'outside',
+        closeBtnType: 'inside',
         // tError: '<a href="{url}">The image {url}</a> could not be loaded.',
         // tNotFound: "Image %url is not available",
       };
@@ -717,7 +717,8 @@
         maxWidth: "98%",
         maxHeight: "100%",
         minHeight: "80%",
-        sizeMode: "strict",
+        closeBtnType: 'inside',
+        // sizeMode: "strict",
 
         markup: `
           <iframe src="{src}" class="b-xpopup__size-holder" frameborder="0" allowfullscreen></iframe>

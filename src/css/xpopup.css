@@ -16,6 +16,50 @@
    12. Clearfix, sticky-панель, ожидание CSS
    ============================================================ */
 
+.b-xpopup {
+  /* --- Переменные --- */
+  /* Общие */
+  --xpopup_border-radius: 16px;
+  --xpopup_background: #fff;
+  --xpopup_box-shadow: 0px 2px 20px -5px rgba(0, 0, 0, 0.5);
+  --xpopup_padding_base: 20px;
+
+  --xpopup__bg_background: #000000aa;
+  --xpopup__bg_blur: 6px;
+
+  /* Бокс */
+  --xpopup__box_padding: 10px;
+
+  /* Шапка */
+  --xpopup__header_height: 56px;
+  --xpopup__header_background: #fafafa;
+  --xpopup__header_color: #000;
+  --xpopup__header_border-bottom: 1px solid transparent;
+  --xpopup__header_font-size: 18px;
+  --xpopup__header_font-weight: normal;
+
+  /* Контент */
+  --xpopup__content_padding: var(--xpopup_padding_base);
+  --xpopup__content_color: #212529;
+
+  /* Подвал */
+  --xpopup__footer_background: #fafafa;
+  --xpopup__footer_border-top: 1px solid #eee;
+  --xpopup__footer_color: #212529;
+
+  /* Кнопка закрытия */
+  --xpopup__close_type_inside: #000;
+
+  /* Иконки */
+  --xpopup__ico_close_color: var(--xpopup__header_color);
+  --xpopup__ico_close_color_outside: #fff;
+  --xpopup__ico_back_color: var(--xpopup__header_color);
+  --xpopup__ico_actions_color: var(--xpopup__header_color);
+  --xpopup__ico_question_color: var(--xpopup__header_color);
+  --xpopup__ico_arrow_left_color: var(--xpopup__header_color);
+  --xpopup__ico_arrow_right_color: var(--xpopup__header_color);
+}
+
 /* ============================================================
    1. БЛОКИРОВКА ПРОКРУТКИ BODY/HTML
    ============================================================ */
@@ -46,11 +90,16 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #00000075;
+  background: var(--xpopup__bg_background, #00000075);
+
   z-index: 1040;
 }
+.b-xpopup__bg.b-xpopup__bg--blur_true {
+  backdrop-filter: blur(var(--xpopup__bg_blur, 6px));
+  -webkit-backdrop-filter: blur(var(--xpopup__bg_blur, 6px));
+}
 
-.b-xpopup__bg-inner {
+/* .b-xpopup__bg-inner {
   position: absolute;
   top: 0;
   left: 0;
@@ -63,7 +112,7 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 
 .b-xpopup__bg.b-xpopup_type_image .b-xpopup__bg-inner {
   background: rgba(0, 0, 0, 0.95);
-}
+} */
 
 /* ============================================================
    3. БОКС И КОНТЕЙНЕРЫ
@@ -258,10 +307,9 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 }
 
 /* Responsive: убираем скругления */
-.b-xpopup.b-xpopup_responsive .b-xpopup__content-container,
-.b-xpopup.b-xpopup_responsive .b-xpopup__content,
-.b-xpopup.b-xpopup_responsive .b-xpopup__footer-container {
-  border-radius: 0;
+.b-xpopup.b-xpopup_responsive {
+  --xpopup_border-radius: 0;
+  --xpopup__box_padding: 0;
 }
 
 /* ============================================================
@@ -517,10 +565,9 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
   box-shadow: none;
   text-decoration: none;
   padding: 0;
-  transition:
-    opacity 0.3s ease,
-    background-color 0.3s ease,
-    transform 0.2s ease;
+}
+.b-xpopup_status_closing .b-xpopup__close.b-xpopup__close_type_outside {
+  display: none !important;
 }
 .b-xpopup__close:hover,
 .b-xpopup__close:focus {
@@ -541,7 +588,7 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
   right: 0;
   width: var(--xpopup__header_height, 56px);
   height: var(--xpopup__header_height, 56px);
-  z-index: 1046;
+  z-index: 2000;
   opacity: 0.7;
   color: currentColor;
 }
@@ -855,7 +902,6 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 .b-xpopup__size-holder {
   /* Делаем size-holder прозрачным для кликов - иначе может не работать click on bg для image */
   pointer-events: none;
-
 }
 
 /* Само изображение */
@@ -900,7 +946,7 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 /* Действия изображения — вверху справа, статичные */
 .b-xpopup__image-actions {
   position: fixed;
-  top: 4px;
+  top: 7px;
   right: 47px;
   z-index: 1051;
   display: flex;
@@ -911,6 +957,7 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 }
 
 .b-xpopup__image-action {
+  position: relative;
   width: 36px;
   height: 36px;
   display: flex;
@@ -932,6 +979,7 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 /* Иконки действий */
 .b-xpopup__image-action_download {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
+  top: 1px;
 }
 .b-xpopup__image-action_share {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z'/%3E%3C/svg%3E");
@@ -940,11 +988,15 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 /* Стрелки навигации (влево/вправо) */
 .b-xpopup__arrow {
   position: fixed;
-  top: 0;
+  top: var(
+    --xpopup__header_height,
+    60
+  ); /* чтобы не перекрывать иконку "Закрыть" */
+  bottom: var(--xpopup__header_height, 60);
   display: flex;
   /* border-radius: 50%; */
   width: 64px;
-  height: 100%;
+  /* height: 100%; */
   cursor: pointer;
   opacity: 0.4;
   /* background-color: rgba(0, 0, 0, 0.1); */
@@ -967,7 +1019,7 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
 }
 .b-xpopup__arrow:hover {
   opacity: 1;
-  background-color: rgba(0, 0, 0, 0.1);
+  /* background-color: rgba(0, 0, 0, 0.1); */
 }
 .b-xpopup__arrow:active {
   transition: none;
