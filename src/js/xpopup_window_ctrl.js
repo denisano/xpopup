@@ -12,6 +12,7 @@
    * Public functions
    */
   class XpopupWindowCtrl {
+
     _buildBoxElements(winData) {
       const win = this;
       const st = this.getStorage();
@@ -114,22 +115,28 @@
       // Анимация окна
       const $animationTarget =
         winData.opts.type === "image"
-          ? null // ещё нет img, добавим в setContent
+          ? null // ещё нет img, добавим в _setContent
           : el.$container;
 
       if ($animationTarget) {
         $animationTarget.addClass(
           winData.opts.boxAnimation == false
-            ? "b-xpopup--box-animation_false"
-            : "b-xpopup--box-animation_true",
+            ? "b-xpopup__box--animation_false"
+            : "b-xpopup__box--animation_true",
         );
       }
 
       // Анимация фона
       el.$bg.addClass(
         winData.opts.bgAnimation == false
-          ? "b-xpopup--bg-animation_false"
-          : "b-xpopup--bg-animation_true",
+          ? "b-xpopup__bg--animation_false"
+          : "b-xpopup__bg--animation_true",
+      );
+      // Размытие фона
+      el.$bg.addClass(
+        winData.opts.bgBlur == true
+          ? "b-xpopup__bg--blur_true"
+          : "b-xpopup__bg--blur_false",
       );
 
       // ===================================================================
@@ -160,21 +167,20 @@
 
       // Компенсация ширины скроллбара при блокировке body
       // Применяем отступ только если скроллбар реально виден
-      const hasScrollbar =
-        document.documentElement.scrollHeight > window.innerHeight;
-      const scrollbarWidth = win._getScrollbarSize();
+      const hasScrollbar = xpopupUtils.isScrollbarOverlay();
 
-      if (hasScrollbar && scrollbarWidth > 0) {
-        el.$boxContainer.css({
-          marginRight: scrollbarWidth + "px",
-          overflow: "hidden",
-        });
-      } else {
-        // Нет скроллбара — просто скрываем, без компенсации
-        el.$boxContainer.css({
-          overflow: "hidden",
-        });
+      if (hasScrollbar) {
+        const scrollbarWidth = win._getScrollbarSize();
+        if (scrollbarWidth > 0) {
+          el.$boxContainer.css({
+            marginRight: scrollbarWidth + "px",
+          });
+        }
       }
+
+      el.$boxContainer.css({
+        overflow: "hidden",
+      });
 
       // ===================================================================
       // Z-INDEX
@@ -208,20 +214,31 @@
           "_removeBoxElements:" + winData.boxId + "/ " + winData.id,
         );
 
-      const plugin = $.xpopup.pluginGetContentTypePlugin(winData.opts.type);
-      plugin.disposeContent(winData, el);
-      st.deleteBox();
-      // st.clearElements();
+      // Очищаем нативные touchmove-обработчики (блокировка pull-to-refresh)
+      if (el._touchMoveHandlers) {
+        Object.keys(el._touchMoveHandlers).forEach(function (key) {
+          var item = el._touchMoveHandlers[key];
+          if (item && item.element) {
+            item.element.removeEventListener("touchmove", item.handler);
+          }
+        });
+        delete el._touchMoveHandlers;
+      }
 
-      // очищаем ResizeObserver перед удалением элементов
+      // Вызываем disposeContent для плагина контента
+      var plugin = $.xpopup.pluginGetContentTypePlugin(winData.opts.type);
+      plugin.disposeContent(winData, el);
+
+      // Удаляем бокс из хранилища
+      st.deleteBox();
+
+      // Очищаем ResizeObserver
       if (el._resizeObserver) {
         el._resizeObserver.disconnect();
         el._resizeObserver = null;
       }
 
-      //Удалим и очистим элементы и события
-      // el.$boxAndBg.remove();
-      // st.clearElements();
+      // Снимаем глобальные обработчики
       $document.add($window).off($.xpopup.EVENT_NS);
     }
 
@@ -230,25 +247,18 @@
       const el = st.getElements();
       const win = $.xpopup.getWindowCtrl();
 
-      // $window.on("resize" + $.xpopup.EVENT_NS, function (e) {
-      //   //после ресайза обязательно сбрасываем кэш размеров
-      //   const st = $.xpopup.getStorage();
-      //   const winData = st.getCurrentWindow();
-      //   if (winData) {
-      //     delete winData._cachedContentSize;
-      //   }
-      //   win._updateBoxSize();
-      // });
+      // ===================================================================
+      // 1. РЕСАЙЗ ОКНА
+      //    Используем requestAnimationFrame для плавности
+      // ===================================================================
       let resizeTimer;
       $window.on("resize" + $.xpopup.EVENT_NS, function (e) {
-        // Сбрасываем кэш размеров
         const st = $.xpopup.getStorage();
         const winData = st.getCurrentWindow();
         if (winData) {
           delete winData._cachedContentSize;
         }
 
-        // Используем requestAnimationFrame для плавности
         if (resizeTimer) {
           cancelAnimationFrame(resizeTimer);
         }
@@ -258,76 +268,69 @@
         });
       });
 
-      /// Document event listeners
+      // ===================================================================
+      // 2. КЛАВИАТУРА (document)
+      //    Esc — закрыть, стрелки — навигация по галерее
+      // ===================================================================
       $document.on("keyup" + $.xpopup.EVENT_NS, function (e) {
         const st = $.xpopup.getStorage();
         const curWinData = st.getCurrentWindow();
         const curEl = st.getElements();
 
-        // console.log('keyup ' + winData.id)
-
-        // Close on ESC key
+        // Esc — закрыть окно
         if (e.keyCode === 27 && curWinData && curWinData.opts.closeOnEsc) {
-          win.closeOnEsc(e);
-          //запрет
+          win._closeOnEsc(e);
           e.stopImmediatePropagation();
           return false;
         }
 
-        //Навигация стрелками для галереи
-        if (/*e.altKey && */ e.keyCode == 37 && curEl.$leftArrow) {
-          /// left arrow
-          //Проверим, что нет элементов форм (textarea, input, select), получивших фокус
-          const noFocus =
-            $(":focus").filter("textarea,input,select").size() == 0;
-          if (noFocus) {
-            curEl.$leftArrow.click();
-            e.stopImmediatePropagation();
-            return false;
-          }
+        // Стрелки для галереи (только если нет фокуса на input/textarea/select)
+        var noFocus = $(":focus").filter("textarea,input,select").size() == 0;
+
+        if (e.keyCode == 37 && curEl.$leftArrow && noFocus) {
+          // Стрелка влево — предыдущее изображение
+          curEl.$leftArrow.click();
+          e.stopImmediatePropagation();
+          return false;
         }
-        if (/*e.altKey && */ e.keyCode == 39 && curEl.$rightArrow) {
-          /// right arrow
-          //Проверим, что нет элементов форм (textarea, input, select), получивших фокус
-          const noFocus =
-            $(":focus").filter("textarea,input,select").size() == 0;
-          if (noFocus) {
-            curEl.$rightArrow.click();
-            e.stopImmediatePropagation();
-            return false;
-          }
+        if (e.keyCode == 39 && curEl.$rightArrow && noFocus) {
+          // Стрелка вправо — следующее изображение
+          curEl.$rightArrow.click();
+          e.stopImmediatePropagation();
+          return false;
         }
       });
 
-      /// Box event listeners
+      // ===================================================================
+      // 3. МЫШЬ: КЛИК ПО БОКСУ / ФОНУ
+      //    Определяем, нужно ли закрыть окно при клике
+      // ===================================================================
       el.$boxAndBg.on("mousedown" + $.xpopup.EVENT_NS, function (e) {
-        //Сохраним на время ссылку на элемент, по которому кликнули.
-        //Этот элемент потребуется в обработчике события click. Больше он нигде не нужен.
+        // Сохраняем элемент, по которому был mousedown
+        // (используется в click для корректного определения цели)
         if (e.which == 1) {
-          //если левая кнопка
           win._lastMousedownTarget = e.target;
         }
       });
+
       el.$boxAndBg.on("click" + $.xpopup.EVENT_NS, function (e) {
-        //Закроем список действий, если клик был сделан не по иконке действий
+        // Закрываем меню действий в шапке при клике вне его
         if (!$(e.target).closest(".b-xpopup__header-actions-toggler").length) {
           el.$box.find(".b-xpopup__header-actions-items:visible").hide();
         }
-        //Используем элемент, по которому был сделано mousedown,
-        //т.к. e.target будет содержать элемент, на котором сработало mouseup, что может быть некоректно при определении
-        //можно ли закрывать окно (например, mousedown на контенте xpopup, а mouseup на xpopup-bg)
-        const clickedElement = win._lastMousedownTarget;
+
+        // Проверяем, можно ли закрыть окно
+        var clickedElement = win._lastMousedownTarget;
         if (win._checkIfClose(clickedElement)) {
           win.close();
         }
-        //Удалим ссылку на объект, по которому сделали mousedown
         delete win._lastMousedownTarget;
       });
 
-      //Если разрешены залипающие плашки в окне
-      //Обработаем событие onScroll в данном xpopup-боксе.
-      //Это необходимо для обеспечения работы "залипающих сверху плашек"
-      //Проведём инициализацию залипающих плашек (если они есть) при первом скроле
+      // ===================================================================
+      // 4. СКРОЛЛ БОКСА — STICKY HEADER
+      //    Отслеживаем залипание шапки при прокрутке
+      // ===================================================================
       let containerMarginTop = 0;
       el.$box.on("scroll" + $.xpopup.EVENT_NS, function (event) {
         const st = $.xpopup.getStorage();
@@ -335,33 +338,33 @@
         const boxData = st.getBox();
         const winData = st.getCurrentWindow();
 
-        //Если не включен режим залипающего хидера или если содержимое окна ещё не ready, то выходим
+        // Sticky header работает только когда окно готово и опция включена
         if (boxData.windowStatus != "ready" || !winData.opts.headerSticked) {
           return;
         }
 
+        // Кэшируем отступ контейнера
         if (containerMarginTop == 0) {
           containerMarginTop = parseInt(el.$box.css("padding-top"));
         }
 
-        //Простой алгоритм выявления факта 'залипания' шапки окна и установки класса _sticked шапки
-        const hasStickedClass = el.$headerContainer.hasClass("_sticked");
-        const scrollTop = el.$box.scrollTop();
-        if (hasStickedClass) {
-          if (scrollTop < containerMarginTop) {
-            el.$headerContainer.removeClass("_sticked");
-            el.$container.removeClass("_header-sticked");
-          }
+        var hasStickedClass = el.$headerContainer.hasClass("_sticked");
+        var scrollTop = el.$box.scrollTop();
+
+        if (hasStickedClass && scrollTop < containerMarginTop) {
+          el.$headerContainer.removeClass("_sticked");
+          el.$container.removeClass("_header-sticked");
         }
-        if (!hasStickedClass) {
-          if (scrollTop >= containerMarginTop) {
-            el.$headerContainer.addClass("_sticked");
-            el.$container.addClass("_header-sticked");
-          }
+        if (!hasStickedClass && scrollTop >= containerMarginTop) {
+          el.$headerContainer.addClass("_sticked");
+          el.$container.addClass("_header-sticked");
         }
       });
 
-      /// Container event listeners ///
+      // ===================================================================
+      // 5. HOVER ПО КОНТЕЙНЕРУ
+      //    Добавляем класс при наведении на содержимое
+      // ===================================================================
       el.$container.hover(
         function () {
           el.$box.addClass("b-xpopup_hover_content");
@@ -371,80 +374,122 @@
         },
       );
 
-      //Поддержка swipe для режима гелереи
-      // нативные touch-события вместо jQuery-плагина свайпов
+      // ===================================================================
+      // 6. СВАЙПЫ ДЛЯ ГАЛЕРЕИ ИЗОБРАЖЕНИЙ
+      //    Вертикальный свайп — закрытие
+      //    Горизонтальный свайп — листание
+      //    Блокировка pull-to-refresh браузера
+      // ===================================================================
       if (winData.opts.type == "image") {
         let pointerStartX = 0;
         let pointerStartY = 0;
-        const swipeThreshold = 50;
-        const swipeRatioThreshold = 1.5;
+        const swipeThreshold = 50; // Минимальное расстояние для свайпа
+        const swipeRatioThreshold = 1.5; // Соотношение сторон: насколько одна ось длиннее другой
 
-        // pointerdown, pointerup работают как на тач устройствах, так и на десктопе, работает везде: мышь, тач, стилус
+        // --- Блокировка pull-to-refresh ---
+        // Используем нативные addEventListener вместо jQuery,
+        // чтобы избежать конфликта с jQuery-обработчиками
+        var blockTouchMove = function (e) {
+          e.preventDefault();
+        };
+
+        el.$box[0].addEventListener("touchmove", blockTouchMove, {
+          passive: false,
+        });
+        el.$bg[0].addEventListener("touchmove", blockTouchMove, {
+          passive: false,
+        });
+
+        // Сохраняем ссылки для очистки при закрытии бокса
+        el._touchMoveHandlers = {
+          box: { element: el.$box[0], handler: blockTouchMove },
+          bg: { element: el.$bg[0], handler: blockTouchMove },
+        };
+
+        // --- Начало касания ---
         el.$container.on("pointerdown" + $.xpopup.EVENT_NS, function (e) {
           pointerStartX = e.originalEvent.clientX;
           pointerStartY = e.originalEvent.clientY;
         });
 
+        // --- Завершение касания: определяем направление свайпа ---
         el.$container.on("pointerup" + $.xpopup.EVENT_NS, function (e) {
-          const pointerEndX = e.originalEvent.clientX;
-          const pointerEndY = e.originalEvent.clientY;
+          var pointerEndX = e.originalEvent.clientX;
+          var pointerEndY = e.originalEvent.clientY;
 
-          const deltaX = pointerEndX - pointerStartX;
-          const deltaY = pointerEndY - pointerStartY;
-          const absDeltaX = Math.abs(deltaX);
-          const absDeltaY = Math.abs(deltaY);
+          var deltaX = pointerEndX - pointerStartX;
+          var deltaY = pointerEndY - pointerStartY;
+          var absDeltaX = Math.abs(deltaX);
+          var absDeltaY = Math.abs(deltaY);
 
+          // Слишком маленькое движение — не свайп (просто тап)
           if (absDeltaX < swipeThreshold && absDeltaY < swipeThreshold) {
             return;
           }
 
-          const curWinData = st.getCurrentWindow();
-          if (curWinData.opts.type != "image") {
+          var curWinData = st.getCurrentWindow();
+          if (!curWinData || curWinData.opts.type != "image") {
             return;
           }
 
-          const curEl = st.getElements();
+          var curEl = st.getElements();
 
-          // Вертикальный свайп — закрытие
+          // --- Вертикальный свайп: закрытие ---
           if (absDeltaY > absDeltaX * swipeRatioThreshold) {
-            if (curWinData.opts.closeOnEsc && absDeltaY > swipeThreshold) {
-              win.closeOnEsc(e);
-              e.stopImmediatePropagation();
+            if (curWinData.opts.closeOnBgClick && absDeltaY > swipeThreshold) {
+              e.preventDefault();
+              e.stopPropagation();
+              win.close();
               return;
             }
           }
 
-          // Горизонтальный свайп — навигация
+          // --- Горизонтальный свайп: навигация ---
           if (
             absDeltaX > absDeltaY * swipeRatioThreshold &&
             absDeltaX > swipeThreshold
           ) {
-            const noFocus =
+            // Не листаем, если фокус в поле ввода
+            var noFocus =
               $(":focus").filter("textarea,input,select").size() == 0;
             if (!noFocus) {
               return;
             }
 
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Свайп влево → следующее изображение (правая стрелка)
             if (deltaX < 0 && curEl.$rightArrow) {
               curEl.$rightArrow.click();
-            } else if (deltaX > 0 && curEl.$leftArrow) {
+            }
+            // Свайп вправо → предыдущее изображение (левая стрелка)
+            else if (deltaX > 0 && curEl.$leftArrow) {
               curEl.$leftArrow.click();
             }
           }
         });
-      } // нативные touch-события
 
-      // zoom по двойному клику на изображении
+        // --- Блокировка выделения текста при свайпе ---
+        el.$container.on("selectstart" + $.xpopup.EVENT_NS, function (e) {
+          e.preventDefault();
+        });
+      }
+
+      // ===================================================================
+      // 7. ZOOM ПО ДВОЙНОМУ КЛИКУ НА ИЗОБРАЖЕНИИ
+      //    Переключает класс b-xpopup-option_zoomed_true на боксе
+      // ===================================================================
       if (winData.opts.type == "image") {
         el.$container.on(
           "click" + $.xpopup.EVENT_NS,
           ".b-xpopup-image__img",
           function (e) {
             e.preventDefault();
-            const $box = el.$box;
+            var $box = el.$box;
             $box.toggleClass("b-xpopup-option_zoomed_true");
 
-            // Сбрасываем скролл при выходе из zoom
+            // При выходе из zoom сбрасываем скролл
             if (!$box.hasClass("b-xpopup-option_zoomed_true")) {
               $box.scrollTop(0).scrollLeft(0);
             }
@@ -452,24 +497,26 @@
         );
       }
 
-      /// Content container event listeners
-      const divElem = el.$contentContainer.get(0);
+      // ===================================================================
+      // 8. RESIZE OBSERVER — ОТСЛЕЖИВАНИЕ ИЗМЕНЕНИЯ РАЗМЕРА КОНТЕНТА
+      //    Автоматически пересчитывает размеры бокса при изменении контента
+      // ===================================================================
+      var divElem = el.$contentContainer.get(0);
 
-      // сохраняем ссылку на ResizeObserver для последующей очистки при закрытии
       if (el._resizeObserver) {
         el._resizeObserver.disconnect();
       }
 
-      el._resizeObserver = new ResizeObserver((entries) => {
-        // проверяем, изменился ли реально размер
-        const newWidth = el.$contentContainer.outerWidth();
-        const newHeight = el.$contentContainer.outerHeight();
+      el._resizeObserver = new ResizeObserver(function (entries) {
+        var newWidth = el.$contentContainer.outerWidth();
+        var newHeight = el.$contentContainer.outerHeight();
 
+        // Размер не изменился — пропускаем
         if (
           el._lastContentWidth === newWidth &&
           el._lastContentHeight === newHeight
         ) {
-          return; // размер не изменился — пропускаем
+          return;
         }
 
         el._lastContentWidth = newWidth;
@@ -964,7 +1011,7 @@
 
       // Обычное поведение без задержки
       if (newWinData.opts.html) {
-        win.renderContent();
+        win._renderContent();
       } else {
         const plugin = $.xpopup.pluginGetContentTypePlugin(
           newWinData.opts.type,
@@ -972,12 +1019,12 @@
         plugin.fetchAndBuildContent(
           function (winData, beforeRenderCallback) {
             if (beforeRenderCallback) beforeRenderCallback(winData);
-            win.renderContent();
+            win._renderContent();
           },
           function (winData, errMsg, beforeRenderCallback) {
             if (beforeRenderCallback) beforeRenderCallback(winData);
             win.setWindowStatus("error", errMsg);
-            win.renderContent();
+            win._renderContent();
           },
         );
       }
@@ -988,7 +1035,7 @@
      *
      * @return {[type]}                   [description]
      */
-    renderContent() {
+    _renderContent() {
       const win = this;
       const st = this.getStorage();
       const oldWinData = st.getCurrentWindow();
@@ -996,7 +1043,7 @@
 
       if (xpopupApi.isDebug())
         console.debug(
-          "renderContent, boxData.status:",
+          "_renderContent, boxData.status:",
           st.getBox().status,
           "newWinData.id:",
           st.getBoxNewWindow()?.id,
@@ -1050,7 +1097,7 @@
       st.setCurWindow(winData.id);
 
       // Вставка контента
-      win.setContent(winData, oldWinData);
+      win._setContent(winData, oldWinData);
       win._updateBoxSize();
 
       // Показываем бокс — контент готов к отображению
@@ -1063,13 +1110,14 @@
       //Если есть анимация открытия бокса, то расчёт позиции outsize closeBtn только после завершения анимации и уточнения размеров окна
       if (
         boxAnimPromise &&
-        (winData.opts.closeBtnType == "outside" ||
-          (winData.opts.closeBtnType == "auto" && !winData.opts.headerHide))
+        // (winData.opts.closeBtnType == "outside" ||
+        //   (winData.opts.closeBtnType == "auto" && !winData.opts.headerHide))
+        winData.opts.closeBtnType == "outside"
       ) {
-        el.$closeBtn.css({ visibility: "hidden" }); //необходимо скрыть иконку пока анимация окна не завершится
+        el.$closeBtn.css({ opacity: "0" }); //необходимо скрыть иконку пока анимация окна не завершится
         boxAnimPromise.then(() => {
           win._updateBoxSize();
-          el.$closeBtn.css({ visibility: "visible" }); //анимация окна завершена, размеры определены, теперь иконку можно показывать
+          el.$closeBtn.css({ opacity: "1" }); //анимация окна завершена, размеры определены, теперь иконку можно показывать
         });
       } else {
         win._updateBoxSize();
@@ -1110,7 +1158,7 @@
      * @param {winData}
      * @param {oldWinData}
      */
-    setContent(winData, oldWinData) {
+    _setContent(winData, oldWinData) {
       const win = this;
       const st = win.getStorage();
       const el = st.getElements(winData);
@@ -1120,7 +1168,7 @@
 
       if (xpopupApi.isDebug())
         console.debug(
-          "setContent called, $box in DOM:",
+          "_setContent() called, $box in DOM:",
           el.$box && document.body.contains(el.$box[0]),
         );
 
@@ -1148,7 +1196,7 @@
       if (el.$content) {
         if (xpopupApi.isDebug())
           console.debug(
-            "setContent before call plugin.disposeContent()",
+            "_setContent before call plugin.disposeContent()",
             oldWinData,
             winData,
           );
@@ -1377,21 +1425,29 @@
       if ($boxAnimTarget.length) {
         $boxAnimTarget
           .removeClass(
-            "b-xpopup--box-animation_false b-xpopup--box-animation_true",
+            "b-xpopup__box--animation_false b-xpopup__box--animation_true",
           )
           .addClass(
             winData.opts.boxAnimation == false
-              ? "b-xpopup--box-animation_false"
-              : "b-xpopup--box-animation_true",
+              ? "b-xpopup__box--animation_false"
+              : "b-xpopup__box--animation_true",
           );
       }
 
       el.$bg
-        .removeClass("b-xpopup--bg-animation_false b-xpopup--bg-animation_true")
+        .removeClass("b-xpopup__bg--animation_false b-xpopup__bg--animation_true")
         .addClass(
           winData.opts.bgAnimation == false
-            ? "b-xpopup--bg-animation_false"
-            : "b-xpopup--bg-animation_true",
+            ? "b-xpopup__bg--animation_false"
+            : "b-xpopup__bg--animation_true",
+        );
+
+      el.$bg
+        .removeClass("b-xpopup__bg--blur_false b-xpopup__bg--blur_true")
+        .addClass(
+          winData.opts.bgBlur == false
+            ? "b-xpopup__bg--blur_false"
+            : "b-xpopup__bg--blur_true",
         );
 
       $.xpopup.emit($.xpopup.EVENT_WINDOW_CHANGE_AFTER);
@@ -1474,7 +1530,7 @@
       return true;
     }
 
-    closeOnEsc(event) {
+    _closeOnEsc(event) {
       const st = this.getStorage();
       const winData = st.getCurrentWindow();
 
@@ -1487,25 +1543,13 @@
     }
 
     /**
-     * Closes the popup
-     */
-    close() {
-      const win = this;
-
-      $.xpopup.emit($.xpopup.EVENT_BOX_CLOSE_BEFORE);
-      win._close();
-    }
-
-    /**
-     * Helper for close() function.
-     *
      * Использует событие animationend для точной синхронизации
      * завершения CSS-анимации и удаления бокса из DOM.
      * Если анимация отключена (boxAnimation: false или boxAnimationClose: 'none'),
      * бокс удаляется немедленно.
      */
-    _close() {
-      if (xpopupApi.isDebug()) console.debug("XpopupWidowCtrl._close called");
+    close() {
+      if (xpopupApi.isDebug()) console.debug("XpopupWidowCtrl.close called");
 
       const win = this;
       const st = this.getStorage();
@@ -1518,11 +1562,14 @@
         return false;
       }
 
+      $.xpopup.emit($.xpopup.EVENT_BOX_CLOSE_BEFORE);
+
       const boxAnimPromise = win._updateBoxAnimation("box-close");
       const bgAnimPromise = win._updateBgAnimation("box-close");
 
       // Меняем статус только если есть хотя бы одна анимация
       if (boxAnimPromise || bgAnimPromise) {
+        win.setWindowStatus("closing");
         boxCtrl.setBoxStatus("closing");
       }
 
@@ -1579,7 +1626,7 @@
       // ===================================================================
       // Функция финального закрытия (удаление DOM, очистка событий)
       // ===================================================================
-      const finishClosing = function () {
+      const _finishClosingCallback = function () {
         $.xpopup.emit($.xpopup.EVENT_WINDOW_DISPOSE_BEFORE);
         $.xpopup.emit($.xpopup.EVENT_WINDOW_DISPOSE_AFTER);
 
@@ -1615,15 +1662,15 @@
         // Ждём завершения всех анимаций
         Promise.all(promises)
           .then(function () {
-            finishClosing();
+            _finishClosingCallback();
           })
           .catch(function () {
             // При ошибке в анимации — закрываем в любом случае
-            finishClosing();
+            _finishClosingCallback();
           });
       } else {
         // Нет анимаций — закрываем мгновенно
-        finishClosing();
+        _finishClosingCallback();
       }
     }
 
@@ -1802,16 +1849,16 @@
       // Настройки длительности для каждого эффекта
       const timingMap = {
         "fade-in": { duration: 300, easing: "ease", fill: "both" },
-        "fade-out": { duration: 300, easing: "ease", fill: "both" },
         "slide-down": { duration: 250, easing: "ease", fill: "both" },
-        "slide-up": { duration: 250, easing: "ease", fill: "both" },
         "zoom-in": {
-          duration: 250,
+          duration: 220,
           easing: "cubic-bezier(.25, .46, .45, .94)",
           fill: "both",
         },
+        "fade-out": { duration: 200, easing: "ease", fill: "both" },
+        "slide-up": { duration: 200, easing: "ease", fill: "both" },
         "zoom-out": {
-          duration: 250,
+          duration: 200,
           easing: "cubic-bezier(.55, .055, .675, .19)",
           fill: "both",
         },
@@ -1858,7 +1905,7 @@
         }
         // С анимацией
         const animation = el.$bg[0].animate([{ opacity: 0 }, { opacity: 1 }], {
-          duration: 600,
+          duration: 300,
           easing: "ease",
           fill: "both",
         });
@@ -1873,7 +1920,7 @@
         }
         // С анимацией
         const animation = el.$bg[0].animate([{ opacity: 1 }, { opacity: 0 }], {
-          duration: 500,
+          duration: 200,
           easing: "ease",
           fill: "both",
         });
@@ -2460,14 +2507,14 @@
       // 3) Если sizeMode == 'auto' — вычисляем оптимальные размеры (с кэшированием)
       // ===================================================================
       if (winData.opts.sizeMode == "auto") {
-        // Если установлен режим responsive и используется смартфон,
-        // то установим мин высоту окна в winHeight.
-        if (winData.opts.responsive && xpopupUtils.isPhone()) {
-          el.$box.addClass("b-xpopup_responsive");
-          css.minHeight = winHeight;
-        } else {
-          el.$box.removeClass("b-xpopup_responsive");
-        }
+        // // Если установлен режим responsive и используется смартфон,
+        // // то установим мин высоту окна в winHeight.
+        // if (winData.opts.responsive && xpopupUtils.isPhone()) {
+        //   el.$box.addClass("b-xpopup_responsive");
+        //   css.minHeight = winHeight;
+        // } else {
+        //   el.$box.removeClass("b-xpopup_responsive");
+        // }
 
         if (css.maxWidth && css.maxWidth > winWidth) {
           css.maxWidth = winWidth;
@@ -2537,24 +2584,78 @@
           el.$container.css({ top: top });
         }
 
-        // Responsive-режим на смартфоне
-        if (winData.opts.responsive && xpopupUtils.isPhone()) {
-          let contentHeight = winHeight;
+        // Если установлен режим responsive и используется смартфон,
+        // то установим мин высоту окна в winHeight.
+        if (
+          winData.opts.responsive &&
+          xpopupUtils.isPhone() &&
+          maxH > winHeight * 0.87
+        ) {
+          el.$box.addClass("b-xpopup_responsive");
+          css.minHeight = winHeight;
+          el.$container.css(css);
 
+          let contentHeight = winHeight;
           if (el.$header) {
             contentHeight -= el.$header.outerHeight();
           }
-
           if (el.$footer) {
             contentHeight -= el.$footer.outerHeight();
           }
-
           el.$contentContainer.css("min-height", contentHeight);
-          el.$box.addClass("b-xpopup_responsive");
         } else {
           el.$box.removeClass("b-xpopup_responsive");
         }
+        // Responsive-режим на смартфоне
+        // if (winData.opts.responsive && xpopupUtils.isPhone()) {
+        //   let contentHeight = winHeight;
+
+        //   if (el.$header) {
+        //     contentHeight -= el.$header.outerHeight();
+        //   }
+
+        //   if (el.$footer) {
+        //     contentHeight -= el.$footer.outerHeight();
+        //   }
+
+        //   el.$contentContainer.css("min-height", contentHeight);
+        //   el.$box.addClass("b-xpopup_responsive");
+        // } else {
+        //   el.$box.removeClass("b-xpopup_responsive");
+        // }
       } else if (winData.opts.sizeMode == "screen") {
+        // Если установлен режим responsive и используется смартфон,
+        // то установим мин высоту окна в winHeight.
+        // if (winData.opts.responsive && xpopupUtils.isPhone()) {
+        //   el.$box.addClass("b-xpopup_responsive");
+        //   css.minHeight = winHeight;
+        // } else {
+        //   el.$box.removeClass("b-xpopup_responsive");
+        // }
+
+        // Если установлен режим responsive и используется смартфон,
+        // то установим мин высоту окна в winHeight.
+        if (
+          winData.opts.responsive &&
+          xpopupUtils.isPhone() &&
+          maxH > winHeight * 0.87
+        ) {
+          el.$box.addClass("b-xpopup_responsive");
+          css.minHeight = winHeight;
+          el.$container.css(css);
+
+          let contentHeight = winHeight;
+          if (el.$header) {
+            contentHeight -= el.$header.outerHeight();
+          }
+          if (el.$footer) {
+            contentHeight -= el.$footer.outerHeight();
+          }
+          el.$contentContainer.css("min-height", contentHeight);
+        } else {
+          el.$box.removeClass("b-xpopup_responsive");
+        }
+
         // Режим "на весь экран" — размеры фиксированы
         css.height = css.minHeight = css.maxHeight = winHeight;
         css.width = css.minWidth = css.maxWidth = winWidth;

@@ -84,12 +84,13 @@
 
         // Анимация бокса (контент + обёртка)
         boxAnimation: true,
-        boxAnimationOpen: "zoom-in",
-        boxAnimationClose: "zoom-out",
+        boxAnimationOpen: "fade-in",
+        boxAnimationClose: "fade-out",
 
         // Анимация фона (подложка)
         // true — плавный fade, false — мгновенно
         bgAnimation: true,
+        bgBlur: false, // Размывать фон при открытии 
 
         closeOnContentClick: false,
         closeOnBgClick: true,
@@ -116,7 +117,7 @@
         footerActionsHide: null,
 
         sizeMode: "auto", //'auto', 'strict', 'screen'
-        responsive: false, //Применяется только, когда sizeMode=='auto' и используется смартфон. Действие: устанавливает min-height окна в winHeight, после этого вычисляет и устанавливает min-height контента.
+        responsive: true, //Применяется только, когда sizeMode=='auto' или 'screen' и используется смартфон. Действие: устанавливает min-height окна в winHeight, после этого вычисляет и устанавливает min-height контента.
         height: null,
         minHeight: null,
         maxHeight: null,

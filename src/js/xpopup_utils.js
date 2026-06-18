@@ -82,15 +82,78 @@
     /**
      * Возвращает true, если используется смартфон.
      */
-    isPhone(winData) {
-      return window.innerWidth < 480;
+    // isPhone(winData) {
+    //   return window.innerWidth < 480;
+    // }
+    /**
+     * Возвращает true, если используется смартфон.
+     * Использует комбинацию: User Agent, pointer, touch, ширина экрана.
+     */
+    isPhone() {
+      if (this._isPhone !== undefined) return this._isPhone;
+
+      const ua = navigator.userAgent || "";
+      const isMobileUA = /Mobi|Android|iPhone|iPod/i.test(ua);
+      const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      const smallScreen = window.innerWidth < 480;
+
+      this._isPhone =
+        smallScreen && (hasTouch || hasCoarsePointer || isMobileUA);
+      return this._isPhone;
     }
 
     /**
      * Возвращает true, если используется планшет.
      */
-    isTablet(winData) {
-      return window.innerWidth >= 480 && window.innerWidth < 1024;
+    // isTablet(winData) {
+    //   return window.innerWidth >= 480 && window.innerWidth < 1024;
+    // }
+    isTablet() {
+      if (this._isTablet !== undefined) return this._isTablet;
+
+      const ua = navigator.userAgent || "";
+      const isTabletUA =
+        /iPad|Tablet|PlayBook/i.test(ua) ||
+        (/Android/i.test(ua) && !/Mobi/i.test(ua));
+      const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      const mediumScreen = window.innerWidth >= 480 && window.innerWidth < 1024;
+
+      this._isTablet =
+        mediumScreen && (hasTouch || hasCoarsePointer || isTabletUA);
+      return this._isTablet;
+    }
+
+    /**
+     * Возвращает true, если используется десктоп.
+     */
+    isDesktop() {
+      return !this.isPhone() && !this.isTablet();
+    }
+
+    /**
+     * Возвращает true, если скроллбар накладывается поверх контента
+     * (iOS Safari, мобильные браузеры, macOS с трекпадом).
+     *
+     * Возвращает false, если скроллбар занимает место в ширине
+     * (классические десктопные браузеры: Windows Chrome, Firefox).
+     */
+    isScrollbarOverlay() {
+      if (this._isScrollbarOverlay !== undefined) {
+        return this._isScrollbarOverlay;
+      }
+
+      const hasClassicScrollbar =
+        window.innerWidth > document.documentElement.clientWidth;
+      const ua = navigator.userAgent || "";
+      const isIOS = /iPhone|iPad|iPod/i.test(ua);
+      const isAndroid = /Android/i.test(ua);
+      const isMacOverlay = /Mac/i.test(ua) && navigator.platform === "MacIntel";
+
+      this._isScrollbarOverlay =
+        !hasClassicScrollbar || isIOS || isAndroid || isMacOverlay;
+      return this._isScrollbarOverlay;
     }
 
     /**

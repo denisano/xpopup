@@ -105,47 +105,7 @@
         Базовый светлый скин. Эталон для всех остальных.
    ============================================================ */
 .b-xpopup_skin_default {
-
-  /* --- Переменные --- */
-  /* Общие */
-  --xpopup_border-radius: 16px;
-  --xpopup_background: #fff;
-  --xpopup_box-shadow: 0px 2px 20px -5px rgba(0, 0, 0, 0.5);
-  --xpopup_padding_base: 20px;
-
-  /* Бокс */
-  --xpopup__box_padding: 10px;
-
-  /* Шапка */
-  --xpopup__header_height: 56px;
-  --xpopup__header_background: #fafafa;
-  --xpopup__header_color: #000;
-  --xpopup__header_border-bottom: 1px solid transparent;
-  --xpopup__header_font-size: 18px;
-  --xpopup__header_font-weight: normal;
-
-  /* Контент */
-  --xpopup__content_padding: var(--xpopup_padding_base);
-  --xpopup__content_color: #212529;
-
-  /* Подвал */
-  --xpopup__footer_background: #fafafa;
-  --xpopup__footer_border-top: 1px solid #eee;
-  --xpopup__footer_color: #212529;
-
-  /* Кнопка закрытия */
-  --xpopup__close_type_inside: #000;
-
-  /* Иконки */
-  --xpopup__ico_close_color: var(--xpopup__header_color);
-  --xpopup__ico_close_color_outside: #fff;
-  --xpopup__ico_back_color: var(--xpopup__header_color);
-  --xpopup__ico_actions_color: var(--xpopup__header_color);
-  --xpopup__ico_question_color: var(--xpopup__header_color);
-  --xpopup__ico_arrow_left_color: var(--xpopup__header_color);
-  --xpopup__ico_arrow_right_color: var(--xpopup__header_color);
-
-  /* --- Селекторы --- */
+  
 }
 
 /* Бокс */
@@ -262,12 +222,12 @@
 }
 
 /* --- Адаптивность --- */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_default {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -305,8 +265,8 @@
   --xpopup__ico_back_color: #000;
   --xpopup__ico_actions_color: #000;
   --xpopup__ico_question_color: #000;
-  --xpopup__ico_arrow_left_color: #000;
-  --xpopup__ico_arrow_right_color: #000;
+  /* --xpopup__ico_arrow_left_color: #000;
+  --xpopup__ico_arrow_right_color: #000; */
 }
 
 /* Бокс */
@@ -406,7 +366,7 @@
 .b-xpopup_skin_vk {
 
   /* --- Переменные --- */
-  --xpopup_border-radius: 8px;
+  --xpopup_border-radius: 12px;
   --xpopup_background: #f7f7f7;
   --xpopup_box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.5);
   --xpopup_padding_base: 20px;
@@ -434,8 +394,8 @@
   --xpopup__ico_back_color: #fff;
   --xpopup__ico_actions_color: #fff;
   --xpopup__ico_question_color: #fff;
-  --xpopup__ico_arrow_left_color: #fff;
-  --xpopup__ico_arrow_right_color: #fff;
+  /* --xpopup__ico_arrow_left_color: #fff;
+  --xpopup__ico_arrow_right_color: #fff; */
 }
 
 /* Бокс */
@@ -539,11 +499,11 @@
 }
 
 /* Адаптивность */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .b-xpopup_skin_vk .b-xpopup__content {
     padding: 0;
   }
-}
+} */
 
 
 /* ============================================================
@@ -713,8 +673,8 @@
   --xpopup__ico_back_color: #007aff;
   --xpopup__ico_actions_color: #8e8e93;
   --xpopup__ico_question_color: #8e8e93;
-  --xpopup__ico_arrow_left_color: #8e8e93;
-  --xpopup__ico_arrow_right_color: #8e8e93;
+  /* --xpopup__ico_arrow_left_color: #8e8e93;
+  --xpopup__ico_arrow_right_color: #8e8e93; */
 }
 
 /* Бокс */
@@ -822,12 +782,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_ios {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -866,8 +826,8 @@
   --xpopup__ico_back_color: #6750a4;
   --xpopup__ico_actions_color: #49454f;
   --xpopup__ico_question_color: #49454f;
-  --xpopup__ico_arrow_left_color: #49454f;
-  --xpopup__ico_arrow_right_color: #49454f;
+  /* --xpopup__ico_arrow_left_color: #49454f;
+  --xpopup__ico_arrow_right_color: #49454f; */
 }
 
 /* Бокс */
@@ -972,12 +932,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_material3 {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -1016,8 +976,8 @@
   --xpopup__ico_back_color: #999;
   --xpopup__ico_actions_color: #999;
   --xpopup__ico_question_color: #999;
-  --xpopup__ico_arrow_left_color: #999;
-  --xpopup__ico_arrow_right_color: #999;
+  /* --xpopup__ico_arrow_left_color: #999;
+  --xpopup__ico_arrow_right_color: #999; */
 }
 
 /* Бокс */
@@ -1125,12 +1085,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_ya {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -1297,12 +1257,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_gos {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -1355,7 +1315,7 @@
   --xpopup__ico_actions_color: #e0e0e0;
   --xpopup__ico_question_color: #e0e0e0;
   --xpopup__ico_arrow_left_color: #e0e0e0;
-  --xpopup__ico_arrow_right_color: #e0e0e0;
+  --xpopup__ico_arrow_right_color: #e0e0e0; 
 }
 
 /* Бокс */
@@ -1465,12 +1425,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_default-dark {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -1509,7 +1469,7 @@
   --xpopup__ico_actions_color: #e0e0e0;
   --xpopup__ico_question_color: #e0e0e0;
   --xpopup__ico_arrow_left_color: #e0e0e0;
-  --xpopup__ico_arrow_right_color: #e0e0e0;
+  --xpopup__ico_arrow_right_color: #e0e0e0; 
 }
 
 /* Бокс */
@@ -1610,7 +1570,7 @@
   --xpopup__box_padding: 10px;
 
   --xpopup__header_height: 56px;
-  --xpopup__header_background: #3a5f8a;
+  --xpopup__header_background: #263f5c;
   --xpopup__header_color: #e0e0e0;
   --xpopup__header_border-bottom: none;
   --xpopup__header_font-size: 16px;
@@ -1631,7 +1591,7 @@
   --xpopup__ico_actions_color: #e0e0e0;
   --xpopup__ico_question_color: #e0e0e0;
   --xpopup__ico_arrow_left_color: #e0e0e0;
-  --xpopup__ico_arrow_right_color: #e0e0e0;
+  --xpopup__ico_arrow_right_color: #e0e0e0; 
 }
 
 /* Бокс */
@@ -1729,11 +1689,11 @@
 }
 
 /* Адаптивность */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .b-xpopup_skin_vk-dark .b-xpopup__content {
     padding: 0;
   }
-}
+} */
 
 
 /* ============================================================
@@ -1904,7 +1864,7 @@
   --xpopup__ico_actions_color: #8e8e93;
   --xpopup__ico_question_color: #8e8e93;
   --xpopup__ico_arrow_left_color: #8e8e93;
-  --xpopup__ico_arrow_right_color: #8e8e93;
+  --xpopup__ico_arrow_right_color: #8e8e93; 
 }
 
 /* Бокс */
@@ -2012,12 +1972,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_ios-dark {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -2056,7 +2016,7 @@
   --xpopup__ico_actions_color: #cac4d0;
   --xpopup__ico_question_color: #cac4d0;
   --xpopup__ico_arrow_left_color: #cac4d0;
-  --xpopup__ico_arrow_right_color: #cac4d0;
+  --xpopup__ico_arrow_right_color: #cac4d0; 
 }
 
 /* Бокс */
@@ -2161,12 +2121,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_material3-dark {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -2205,7 +2165,7 @@
   --xpopup__ico_actions_color: #999;
   --xpopup__ico_question_color: #999;
   --xpopup__ico_arrow_left_color: #999;
-  --xpopup__ico_arrow_right_color: #999;
+  --xpopup__ico_arrow_right_color: #999; 
 }
 
 /* Бокс */
@@ -2310,12 +2270,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_ya-dark {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
@@ -2354,7 +2314,7 @@
   --xpopup__ico_actions_color: #8b95a5;
   --xpopup__ico_question_color: #8b95a5;
   --xpopup__ico_arrow_left_color: #8b95a5;
-  --xpopup__ico_arrow_right_color: #8b95a5;
+  --xpopup__ico_arrow_right_color: #8b95a5; 
 }
 
 /* Бокс */
@@ -2478,12 +2438,12 @@
 }
 
 /* Адаптивность */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .b-xpopup_skin_gos-dark {
     --xpopup__box_padding: 0px;
     --xpopup_border-radius: 0px;
   }
-}
+} */
 
 
 /* ============================================================
