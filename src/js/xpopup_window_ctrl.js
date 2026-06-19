@@ -166,9 +166,9 @@
 
       // Компенсация ширины скроллбара при блокировке body
       // Применяем отступ только если скроллбар реально виден
-      const hasScrollbar = xpopupUtils.isScrollbarOverlay();
+      const isScrollbarOverlay = xpopupUtils.isScrollbarOverlay();
 
-      if (hasScrollbar) {
+      if (!isScrollbarOverlay) {
         const scrollbarWidth = win._getScrollbarSize();
         if (scrollbarWidth > 0) {
           el.$boxContainer.css({
