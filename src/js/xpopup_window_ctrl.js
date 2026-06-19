@@ -12,7 +12,6 @@
    * Public functions
    */
   class XpopupWindowCtrl {
-
     _buildBoxElements(winData) {
       const win = this;
       const st = this.getStorage();
@@ -352,10 +351,12 @@
         var scrollTop = el.$box.scrollTop();
 
         if (hasStickedClass && scrollTop < containerMarginTop) {
+          el.$box.removeClass("b-xpopup_has-sticked");
           el.$headerContainer.removeClass("_sticked");
           el.$container.removeClass("_header-sticked");
         }
         if (!hasStickedClass && scrollTop >= containerMarginTop) {
+          el.$box.addClass("b-xpopup_has-sticked");
           el.$headerContainer.addClass("_sticked");
           el.$container.addClass("_header-sticked");
         }
@@ -1435,7 +1436,9 @@
       }
 
       el.$bg
-        .removeClass("b-xpopup__bg--animation_false b-xpopup__bg--animation_true")
+        .removeClass(
+          "b-xpopup__bg--animation_false b-xpopup__bg--animation_true",
+        )
         .addClass(
           winData.opts.bgAnimation == false
             ? "b-xpopup__bg--animation_false"
@@ -2637,8 +2640,7 @@
         // то установим мин высоту окна в winHeight.
         if (
           winData.opts.responsive &&
-          xpopupUtils.isPhone() &&
-          maxH > winHeight * 0.87
+          xpopupUtils.isPhone() 
         ) {
           el.$box.addClass("b-xpopup_responsive");
           css.minHeight = winHeight;

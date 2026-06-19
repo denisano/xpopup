@@ -1162,8 +1162,15 @@ html.b-html-xpopup.b-html-xpopup_scrollable body.b-body-xpopup {
   z-index: 1000;
   top: calc(0px - var(--xpopup__box_padding));
 }
-.b-xpopup__content-container._header-sticked {
+
+.b-xpopup_has-sticked .b-xpopup__content-container {
   overflow: visible !important;
+}
+
+.b-xpopup_has-sticked .b-xpopup__content-container, 
+.b-xpopup_has-sticked .b-xpopup__header-container,
+.b-xpopup_has-sticked .b-xpopup__header
+{
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
 }
