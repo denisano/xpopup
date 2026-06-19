@@ -149,10 +149,9 @@
       const ua = navigator.userAgent || "";
       const isIOS = /iPhone|iPad|iPod/i.test(ua);
       const isAndroid = /Android/i.test(ua);
-      const isMacOverlay = /Mac/i.test(ua) && navigator.platform === "MacIntel";
+      // const isMacOverlay = /Mac/i.test(ua) && navigator.platform === "MacIntel";
 
-      this._isScrollbarOverlay =
-        !hasClassicScrollbar || isIOS || isAndroid || isMacOverlay;
+      this._isScrollbarOverlay = !hasClassicScrollbar || isIOS || isAndroid; // || isMacOverlay;
       return this._isScrollbarOverlay;
     }
 
