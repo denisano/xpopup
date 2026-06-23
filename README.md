@@ -62,13 +62,24 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <!-- XPopup -->
-<link rel="stylesheet" href="xpopup/css/xpopup.css">
-<link rel="stylesheet" href="xpopup/css/xpopup-skins.css">
-<script src="xpopup/js/xpopup_utils.js"></script>
-<script src="xpopup/js/xpopup_storage.js"></script>
-<script src="xpopup/js/jquery.xpopup.js"></script>
-<script src="xpopup/js/xpopup_types.js"></script>
-<script src="xpopup/js/xpopup_window_ctrl.js"></script>
+<link rel="stylesheet" href="xpopup/src/css/xpopup.css">
+<link rel="stylesheet" href="xpopup/src/css/xpopup-skins.css">
+<script src="xpopup/src/js/xpopup_utils.js"></script>
+<script src="xpopup/src/js/xpopup_storage.js"></script>
+<script src="xpopup/src/js/jquery.xpopup.js"></script>
+<script src="xpopup/src/js/xpopup_types.js"></script>
+<script src="xpopup/src/js/xpopup_window_ctrl.js"></script>
+```
+
+или так:
+
+```html
+<!-- jQuery (обязательно) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- XPopup -->
+<link rel="stylesheet" href="xpopup/dist/css/xpopup.min.css">
+<script src="xpopup/dist/js/jquery.xpopup.min.js"></script>
 ```
 
 ### Простое использование
