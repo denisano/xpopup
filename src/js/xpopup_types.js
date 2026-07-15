@@ -217,6 +217,9 @@
         } else {
           $(winData.triggerEl).after($_el);
         }
+        // if(detachedElementData.$previousContentSibling && detachedElementData.$previousContentSibling.length) {
+        //   detachedElementData.$previousContentSibling.after($_el);
+        // }
 
         delete this.detachedElementsData[winId];
       }
@@ -301,15 +304,21 @@
 
       //Данные получены, начинаем их обработку для последующей отрисовки результата
       let $el;
+      let $previousContentSibling = null;
       if (winData.opts.content) {
         $el = $(winData.opts.content).first(); //winData.opts.content - это css-selector
+        $previousContentSibling = $el.prev();
       } else {
         //Если winData.opts.content пустой, значит попробуем получить контент из следующего за winData.triggerEl div-элемента.
         //Внимание: важно, чтобы это был именно следующий элемент и он был скрыт с помощью style='display:none;'
         const $nextTriggerSibling = $(winData.triggerEl.nextElementSibling);
-        if ($nextTriggerSibling.is(":visible")) {
+        if (
+          $nextTriggerSibling.is(":visible") == false ||
+          $nextTriggerSibling.hasClass("b-xpopup-container")
+        ) {
           $el = $nextTriggerSibling;
         }
+        $previousContentSibling = $(winData.triggerEl);
       }
 
       if ($el.length) {
@@ -322,7 +331,11 @@
         if (parent && parent.tagName) {
           //Сохраним необходимые данные для возврата восстановления исходного состояния элемента после закрытия popup-окна
           detachedElementData.detachedElementVisibility = $el.is(":visible");
-          detachedElementData.$detachedElementParent = $(parent);
+          detachedElementData.$previousContentSibling = $previousContentSibling;
+          if (winData.opts.content) {
+            //Если контент был указан через css-selector
+            detachedElementData.$detachedElementParent = $(parent);
+          }
           detachedElementData.$detachedElement = $el.detach();
 
           if (detachedElementData.detachedElementVisibility === false) {
@@ -380,7 +393,7 @@
         markup: this.markup,
         sizeMode: "screen",
         closeOnBgClick: true,
-        closeBtnType: 'inside',
+        closeBtnType: "inside",
         // tError: '<a href="{url}">The image {url}</a> could not be loaded.',
         // tNotFound: "Image %url is not available",
       };
@@ -717,7 +730,7 @@
         maxWidth: "98%",
         maxHeight: "100%",
         minHeight: "80%",
-        closeBtnType: 'inside',
+        closeBtnType: "inside",
         // sizeMode: "strict",
 
         markup: `
